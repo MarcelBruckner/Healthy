@@ -95,3 +95,17 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type Entry = {
+  datum: string;
+  uhrzeit: string;
+  ort: string;
+  art_und_weise: string;
+  speisen: string;
+  getraenke: string;
+  beschwerden: string;
+  stuhltyp: number;
+  stuhlverhalten: string;
+  therapie: string;
+  anmerkungen: string;
+};

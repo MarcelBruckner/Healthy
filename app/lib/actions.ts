@@ -2,7 +2,7 @@
 import { z } from 'zod';
 import fs from 'node:fs';
 import { fetchInvoices } from './data';
-import { Invoice, InvoiceWithoutId } from './definitions';
+import { Entry, Invoice, InvoiceWithoutId } from './definitions';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';

@@ -10,10 +10,12 @@ import {
   Invoice,
   Customer,
   LatestInvoice,
+  Entry,
 } from './definitions';
 import { formatCurrency } from './utils';
 import fs from 'node:fs';
 import { unstable_noStore as noStore } from 'next/cache';
+import { parse } from 'csv';
 
 export function readJsonFile(path: string) {
   const fileContent = fs.readFileSync(path, 'utf8');
@@ -301,5 +303,52 @@ export async function getUser(email: string) {
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
+  }
+}
+
+export async function fetchEntries(): Promise<Entry[]> {
+  try {
+    return new Promise((resolve, reject) => {
+      const entries: Entry[] = [];
+      fs.createReadStream('./app/lib/entries.csv')
+        .pipe(parse({ delimiter: ',', from_line: 2 }))
+        .on('data', (row) => {
+          const entry: Entry = {
+            datum: row[0],
+            uhrzeit: row[1],
+            ort: row[2],
+            art_und_weise: row[3],
+            speisen: row[4],
+            getraenke: row[5],
+            beschwerden: row[6],
+            stuhltyp: row[7],
+            stuhlverhalten: row[8],
+            therapie: row[9],
+            anmerkungen: row[10],
+          };
+          entries.push(entry);
+        })
+        .on('end', function () {
+          console.log('finished');
+          resolve(
+            entries.sort((a, b) => {
+              if (a.datum > b.datum) {
+                return -1;
+              } else if (a.datum < b.datum) {
+                return 1;
+              } else {
+                return a.uhrzeit > b.uhrzeit ? -1 : 1;
+              }
+            }),
+          );
+        })
+        .on('error', function (error) {
+          console.log(error.message);
+          reject(error);
+        });
+    });
+  } catch (error) {
+    console.error('Failed to fetch entries:', error);
+    throw new Error('Failed to fetch entries.');
   }
 }
