@@ -103,29 +103,27 @@ export async function fetchFilteredEntries(query: string, currentPage: number) {
 export async function fetchEntriesPages(query: string) {
   noStore();
   try {
-    const invoices = await fetchFilteredEntriesUnpaginated(query);
+    const entries = await fetchFilteredEntriesUnpaginated(query);
 
-    const totalPages = Math.ceil(Number(invoices.length) / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(Number(entries.length) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch total number of invoices.");
+    throw new Error("Failed to fetch total number of entries.");
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+export async function fetchEntryById(id: string) {
   noStore();
   try {
-    const invoice = (await fetchInvoices()).map((invoice, index) => ({
-      ...invoice,
-      // Convert amount from cents to dollars
-      amount: invoice.amount / 100
-    }));
-
-    return invoice[+id];
+    const entries = (await fetchEntries()).filter(entry => entry.id === id);
+    if (entries.length === 0) {
+      return null;
+    }
+    return entries[0];
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch invoice.");
+    throw new Error("Failed to fetch entry.");
   }
 }
 

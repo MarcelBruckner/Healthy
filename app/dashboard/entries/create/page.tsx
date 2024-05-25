@@ -4,12 +4,10 @@ import Form from "@/app/ui/entries/create-form";
 import { Metadata } from "next";
 
 export const METADATA: Metadata = {
-    title: "Create Invoice",
+    title: "Create Invoice"
 };
 
 export default async function Page() {
-    const customers = await fetchCustomers();
-
     return (
         <main>
             <Breadcrumbs
@@ -18,7 +16,7 @@ export default async function Page() {
                     {
                         label: "Eintrag anlegen",
                         href: "/dashboard/entries/create",
-                        active: true,
+                        active: true
                     }
                 ]}
             />

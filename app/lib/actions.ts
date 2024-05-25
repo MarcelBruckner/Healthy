@@ -1,7 +1,7 @@
 "use server";
 import { z } from "zod";
 import fs from "node:fs";
-import { InvoiceWithoutId } from "./definitions";
+import { Entry, InvoiceWithoutId } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
@@ -58,7 +58,7 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({ id: true });
 const UpdateInvoice = FormSchema.omit({ id: true });
 
-export async function createInvoice(prevState: State, formData: FormData) {
+function validateFormData(formData: FormData, id?: string): State | Entry {
   const validatedFields = CreateInvoice.safeParse({
     datum: formData.get("datum"),
     uhrzeit: formData.get("uhrzeit"),
@@ -103,10 +103,25 @@ export async function createInvoice(prevState: State, formData: FormData) {
     };
   }
 
-  let entries = await fetchEntries();
-  entries.push({ id: uuidv4(), ...validatedFields.data });
+  if (!id) {
+    id = uuidv4();
+  }
+  return { id: id, ...validatedFields.data };
+}
+
+function isEntry(data: State | Entry): data is Entry {
+  return (<Entry>data).stuhltyp !== undefined;
+}
+
+export async function createEntry(prevState: State, formData: FormData) {
+  const validatedFields = validateFormData(formData);
+  if (!isEntry(validatedFields)) {
+    return validatedFields;
+  }
 
   try {
+    let entries = await fetchEntries();
+    entries.push(validatedFields);
     await writeEntries(entries);
   } catch (error) {
     return {
@@ -115,6 +130,46 @@ export async function createInvoice(prevState: State, formData: FormData) {
   }
   revalidatePath("/dashboard/entries");
   redirect("/dashboard/entries");
+}
+
+export async function updateEntry(
+  id: string,
+  prevState: State,
+  formData: FormData
+) {
+  const validatedFields = validateFormData(formData, id);
+  if (!isEntry(validatedFields)) {
+    return validatedFields;
+  }
+
+  try {
+    let entries = await fetchEntries();
+    entries = entries.filter(entry => entry.id !== id);
+    entries.push(validatedFields);
+    await writeEntries(entries);
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Update Entry."
+    };
+  }
+
+  revalidatePath("/dashboard/entries");
+  redirect("/dashboard/entries");
+}
+
+export async function deleteInvoice(id: string) {
+  let entries = await fetchEntries();
+  entries = entries.filter(entry => entry.id !== id);
+
+  try {
+    writeEntries(entries);
+    revalidatePath("/dashboard/entries");
+    return { message: "Deleted Entry." };
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Delete Entry."
+    };
+  }
 }
 
 function hasPoop(
@@ -267,47 +322,6 @@ function hasValidFoodAndDrinks(
     (validatedFields.data?.speisen !== "" ||
       validatedFields.data?.getraenke !== "")
   );
-}
-
-export async function updateInvoice(id: string, formData: FormData) {
-  const { customerId, amount, status } = UpdateInvoice.parse({
-    customerId: formData.get("customerId"),
-    amount: formData.get("amount"),
-    status: formData.get("status")
-  });
-  const amountInCents = amount * 100;
-
-  let invoices: InvoiceWithoutId[] = await fetchInvoices();
-  invoices[+id] = {
-    customer_id: customerId,
-    amount: amountInCents,
-    status: status,
-    date: invoices[+id].date
-  };
-  try {
-    writeJsonFile(invoices, "./app/lib/invoices.json");
-  } catch (error) {
-    return {
-      message: "Database Error: Failed to Update Invoice."
-    };
-  }
-  revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
-}
-
-export async function deleteInvoice(id: string) {
-  let entries = await fetchEntries();
-  entries = entries.filter(entry => entry.id !== id);
-
-  try {
-    writeEntries(entries);
-    revalidatePath("/dashboard/entries");
-    return { message: "Deleted Entry." };
-  } catch (error) {
-    return {
-      message: "Database Error: Failed to Delete Entry."
-    };
-  }
 }
 
 export async function authenticate(

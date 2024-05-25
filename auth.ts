@@ -1,20 +1,20 @@
-import NextAuth from 'next-auth';
-import { authConfig } from './auth.config';
-import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
-import { sql } from '@vercel/postgres';
-import type { User } from '@/app/lib/definitions';
-import bcrypt from 'bcrypt';
-import fs from 'node:fs';
-import { readJsonFile } from './app/lib/data';
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
+import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
+import { sql } from "@vercel/postgres";
+import type { User } from "@/app/lib/definitions";
+import bcrypt from "bcrypt";
+import fs from "node:fs";
+import { readJsonFile } from "./app/lib/data";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
-    const users: User[] = readJsonFile('./app/lib/users.json');
-    return users.filter((u) => u.email === email)![0];
+    const users: User[] = readJsonFile("./app/lib/users.json");
+    return users.filter(u => u.email === email)![0];
   } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
   }
 }
 
@@ -38,7 +38,7 @@ export const { auth, signIn, signOut } = NextAuth({
           if (passwordsMatch) return user;
         }
         return null;
-      },
-    }),
-  ],
+      }
+    })
+  ]
 });

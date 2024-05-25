@@ -1,10 +1,10 @@
-import { UpdateEntry, DeleteEntry } from '@/app/ui/entries/buttons';
-import { fetchFilteredEntries } from '@/app/lib/data';
-import { Entry } from '@/app/lib/definitions';
+import { UpdateEntry, DeleteEntry } from "@/app/ui/entries/buttons";
+import { fetchFilteredEntries } from "@/app/lib/data";
+import { Entry } from "@/app/lib/definitions";
 
 export default async function EntriesTable({
   query,
-  currentPage,
+  currentPage
 }: {
   query: string;
   currentPage: number;
@@ -16,42 +16,32 @@ export default async function EntriesTable({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {entries?.map((entry) => (
+            {entries?.map(entry => (
               <div
                 key={entry.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <p className="text-sm text-gray-500">{entry.datum} {entry.uhrzeit}</p>
+                    <p className="text-sm text-gray-500">
+                      {entry.datum} {entry.uhrzeit}
+                    </p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
+                    <p className="font-medium">{entry.ort}</p>
+                    <p className="font-medium">{entry.motivation}</p>
+                    <p className="font-medium">{entry.speisen}</p>
+                    <p className="font-medium">{entry.getraenke}</p>
+                    <p className="font-medium">{entry.beschwerden}</p>
                     <p className="font-medium">
-                      {entry.ort}
+                      {entry.stuhltyp > 0
+                        ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}`
+                        : ""}
                     </p>
-                    <p className="font-medium">
-                      {entry.motivation}
-                    </p>
-                    <p className="font-medium">
-                      {entry.speisen}
-                    </p>
-                    <p className="font-medium">
-                      {entry.getraenke}
-                    </p>
-                    <p className="font-medium">
-                      {entry.beschwerden}
-                    </p>
-                    <p className="font-medium">
-                      {entry.stuhltyp > 0 ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}` : ""}
-                    </p>
-                    <p className="font-medium">
-                      {entry.therapie}
-                    </p>
-                    <p className="font-medium">
-                      {entry.anmerkungen}
-                    </p>
+                    <p className="font-medium">{entry.therapie}</p>
+                    <p className="font-medium">{entry.anmerkungen}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateEntry id={entry.id} />
@@ -97,7 +87,7 @@ export default async function EntriesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {entries.map((entry) => (
+              {entries.map(entry => (
                 <tr
                   key={entry.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -105,9 +95,7 @@ export default async function EntriesTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {entry.datum} {entry.uhrzeit}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {entry.ort}
-                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{entry.ort}</td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {entry.motivation}
                   </td>
@@ -121,7 +109,9 @@ export default async function EntriesTable({
                     {entry.beschwerden}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {entry.stuhltyp > 0 ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}` : ""}
+                    {entry.stuhltyp > 0
+                      ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}`
+                      : ""}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {entry.therapie}
