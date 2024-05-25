@@ -16,9 +16,9 @@ export default async function EntriesTable({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {entries?.map((entry, index) => (
+            {entries?.map((entry) => (
               <div
-                key={index}
+                key={entry.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
@@ -54,8 +54,8 @@ export default async function EntriesTable({
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateEntry id={index.toString()} />
-                    <DeleteEntry id={index.toString()} />
+                    <UpdateEntry id={entry.id} />
+                    <DeleteEntry id={entry.id} />
                   </div>
                 </div>
               </div>
@@ -97,9 +97,9 @@ export default async function EntriesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {entries.map((entry, index) => (
+              {entries.map((entry) => (
                 <tr
-                  key={index}
+                  key={entry.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap px-3 py-3">
@@ -131,8 +131,8 @@ export default async function EntriesTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateEntry id={index.toString()} />
-                      <DeleteEntry id={index.toString()} />
+                      <UpdateEntry id={entry.id} />
+                      <DeleteEntry id={entry.id} />
                     </div>
                   </td>
                 </tr>

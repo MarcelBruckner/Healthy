@@ -296,18 +296,16 @@ export async function updateInvoice(id: string, formData: FormData) {
 }
 
 export async function deleteInvoice(id: string) {
-  throw new Error("Failed to Delete Invoice");
-
-  let invoices: InvoiceWithoutId[] = await fetchInvoices();
-  invoices.splice(+id, 1);
+  let entries = await fetchEntries();
+  entries = entries.filter(entry => entry.id !== id);
 
   try {
-    writeJsonFile(invoices, "./app/lib/invoices.json");
-    revalidatePath("/dashboard/invoices");
-    return { message: "Deleted Invoice." };
+    writeEntries(entries);
+    revalidatePath("/dashboard/entries");
+    return { message: "Deleted Entry." };
   } catch (error) {
     return {
-      message: "Database Error: Failed to Delete Invoice."
+      message: "Database Error: Failed to Delete Entry."
     };
   }
 }
