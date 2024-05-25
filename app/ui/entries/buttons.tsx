@@ -2,7 +2,7 @@ import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteInvoice } from '@/app/lib/actions';
 
-export function CreateInvoice() {
+export function CreateEntry() {
   return (
     <Link
       href="/dashboard/entries/create"
@@ -14,7 +14,7 @@ export function CreateInvoice() {
   );
 }
 
-export function UpdateInvoice({ id }: { id: string }) {
+export function UpdateEntry({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/entries/${id}/edit`}
@@ -25,7 +25,7 @@ export function UpdateInvoice({ id }: { id: string }) {
   );
 }
 
-export function DeleteInvoice({ id }: { id: string }) {
+export function DeleteEntry({ id }: { id: string }) {
   const deleteInvoiceWithId = deleteInvoice.bind(null, id);
 
   return (

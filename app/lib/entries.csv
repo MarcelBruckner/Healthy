@@ -1,2 +1,8 @@
-Datum,Uhrzeit,Ort, Art und Weise,Speisen,Getränke,Beschwerden,Stuhltyp,Stuhlverhalten,Therapie,Anmerkungen
-2024-05-18,14:00,Zuhause,Zwischenmahlzeit,2 belegte Semmeln,1 Glas Wasser,Bauchgrummeln,0,,, 
+id,datum,uhrzeit,ort,motivation,speisen,getraenke,beschwerden,stuhltyp,stuhlverhalten,therapie,anmerkungen
+06ea3f43-b6f8-471a-888d-9eb761344eeb,2024-05-25,16:29:05,Zuhause,,Nix,,,0,,,
+3430f0fb-9db2-4d95-bc17-c7e06f98c4f2,2024-05-25,16:10:01,Zuhause,,Nix,,,0,,,
+51eba769-ecc2-43df-8924-8ec367d9eac9,2024-05-25,16:09:28,Zuhause,,,,,0,,,
+e22d06b6-6be4-413e-95d2-50a9cd040b55,2024-05-25,16:09:13,Zuhause,,,,,0,,,
+e5af1fcb-4e77-4044-84d6-59d2d43c3f98,2024-05-25,16:08:37,Zuhause,,,,,0,,,
+fb0185b3-794f-45d0-9969-01f2b8b2f3bc,2024-05-25,16:03:50,Zuhause,,,,,0,,,
+9be9dfff-c284-4021-a3fd-1376565fdab3,2024-05-25,16:32:09,,,,,,3,Super,,

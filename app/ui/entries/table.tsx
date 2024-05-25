@@ -1,9 +1,6 @@
-import Image from 'next/image';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
-import InvoiceStatus from '@/app/ui/invoices/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchEntries, fetchFilteredInvoices } from '@/app/lib/data';
-import { Entry, Invoice, InvoicesTable } from '@/app/lib/definitions';
+import { UpdateEntry, DeleteEntry } from '@/app/ui/entries/buttons';
+import { fetchFilteredEntries } from '@/app/lib/data';
+import { Entry } from '@/app/lib/definitions';
 
 export default async function EntriesTable({
   query,
@@ -12,7 +9,7 @@ export default async function EntriesTable({
   query: string;
   currentPage: number;
 }) {
-  const entries: Entry[] = await fetchEntries();
+  const entries: Entry[] = await fetchFilteredEntries(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
@@ -35,7 +32,7 @@ export default async function EntriesTable({
                       {entry.ort}
                     </p>
                     <p className="font-medium">
-                      {entry.art_und_weise}
+                      {entry.motivation}
                     </p>
                     <p className="font-medium">
                       {entry.speisen}
@@ -47,7 +44,7 @@ export default async function EntriesTable({
                       {entry.beschwerden}
                     </p>
                     <p className="font-medium">
-                      Typ {entry.stuhltyp} {entry.stuhlverhalten}
+                      {entry.stuhltyp > 0 ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}` : ""}
                     </p>
                     <p className="font-medium">
                       {entry.therapie}
@@ -57,8 +54,8 @@ export default async function EntriesTable({
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateInvoice id={index.toString()} />
-                    <DeleteInvoice id={index.toString()} />
+                    <UpdateEntry id={index.toString()} />
+                    <DeleteEntry id={index.toString()} />
                   </div>
                 </div>
               </div>
@@ -74,7 +71,7 @@ export default async function EntriesTable({
                   Ort
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Art und Weise
+                  Motivation
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Speisen
@@ -112,7 +109,7 @@ export default async function EntriesTable({
                     {entry.ort}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {entry.art_und_weise}
+                    {entry.motivation}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {entry.speisen}
@@ -124,7 +121,7 @@ export default async function EntriesTable({
                     {entry.beschwerden}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    Typ {entry.stuhltyp} {entry.stuhlverhalten}
+                    {entry.stuhltyp > 0 ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}` : ""}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {entry.therapie}
@@ -134,8 +131,8 @@ export default async function EntriesTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={index.toString()} />
-                      <DeleteInvoice id={index.toString()} />
+                      <UpdateEntry id={index.toString()} />
+                      <DeleteEntry id={index.toString()} />
                     </div>
                   </td>
                 </tr>
