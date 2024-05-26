@@ -3,8 +3,8 @@ import Breadcrumbs from "@/app/ui/entries/breadcrumbs";
 import Form from "@/app/ui/entries/create-form";
 import { Metadata } from "next";
 
-export const METADATA: Metadata = {
-    title: "Create Invoice"
+export const metadata: Metadata = {
+    title: "Eintrag anlegen"
 };
 
 export default async function Page() {

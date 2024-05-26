@@ -4,8 +4,8 @@ import { fetchEntryById, fetchCustomers, fetchEntries } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
-export const METADATA: Metadata = {
-  title: "Update Eintrag"
+export const metadata: Metadata = {
+  title: "Eintrag bearbeiten"
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
