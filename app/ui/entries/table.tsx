@@ -1,4 +1,4 @@
-import { UpdateEntry, DeleteEntry } from "@/app/ui/entries/buttons";
+import { UpdateEntry, DeleteEntry, CopyEntry } from "@/app/ui/entries/buttons";
 import { fetchFilteredEntries } from "@/app/lib/data";
 import { Entry } from "@/app/lib/definitions";
 import { ReactComponentElement } from "react";
@@ -166,6 +166,7 @@ export default async function EntriesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateEntry id={entry.id} />
+                      <CopyEntry id={entry.id} />
                       <DeleteEntry id={entry.id} />
                     </div>
                   </td>

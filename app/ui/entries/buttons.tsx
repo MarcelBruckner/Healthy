@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon, PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { deleteInvoice as deleteEntry } from "@/app/lib/actions";
 
@@ -21,6 +21,17 @@ export function UpdateEntry({ id }: { id: string }) {
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
+    </Link>
+  );
+}
+
+export function CopyEntry({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/entries/${id}/copy`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      <DocumentDuplicateIcon className="w-5" />
     </Link>
   );
 }

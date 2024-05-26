@@ -42,16 +42,19 @@ export async function fetchCardData() {
   noStore();
 
   try {
-    const numberOfCustomers = 0;
-    const numberOfInvoices = 0;
-    const totalPaidInvoices = 0;
-    const totalPendingInvoices = 0;
+    const entries = await fetchEntries();
+    const totalNumberOfEntries = entries.length;
+    const numberOfFoods = entries.filter(entry => entry.speisen !== "").length;
+    const numberOfDrinks = entries.filter(
+      entry => entry.getraenke !== ""
+    ).length;
+    const numberOfPoops = entries.filter(entry => entry.stuhltyp !== 0).length;
 
     return {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices
+      totalNumberOfEntries,
+      numberOfFoods,
+      numberOfDrinks,
+      numberOfPoops
     };
   } catch (error) {
     console.error("Database Error:", error);
@@ -211,6 +214,10 @@ export async function writeEntries(entries: Entry[]): Promise<void> {
     console.error("Failed to write entries:", error);
     throw new Error("Failed to write entries.");
   }
+}
+
+export async function fetchLatestEntries(): Promise<Entry[]> {
+  return (await fetchEntries()).slice(0, 5);
 }
 
 export async function fetchEntries(): Promise<Entry[]> {

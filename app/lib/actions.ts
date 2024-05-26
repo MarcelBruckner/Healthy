@@ -157,6 +157,30 @@ export async function updateEntry(
   redirect("/dashboard/entries");
 }
 
+export async function copyEntry(
+  id: string,
+  prevState: State,
+  formData: FormData
+) {
+  const validatedFields = validateFormData(formData);
+  if (!isEntry(validatedFields)) {
+    return validatedFields;
+  }
+
+  try {
+    let entries = await fetchEntries();
+    entries.push(validatedFields);
+    await writeEntries(entries);
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Update Entry."
+    };
+  }
+
+  revalidatePath("/dashboard/entries");
+  redirect("/dashboard/entries");
+}
+
 export async function deleteInvoice(id: string) {
   let entries = await fetchEntries();
   entries = entries.filter(entry => entry.id !== id);
