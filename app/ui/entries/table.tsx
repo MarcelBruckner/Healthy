@@ -1,6 +1,8 @@
 import { UpdateEntry, DeleteEntry } from "@/app/ui/entries/buttons";
 import { fetchFilteredEntries } from "@/app/lib/data";
 import { Entry } from "@/app/lib/definitions";
+import { ReactComponentElement } from "react";
+import { HomeIcon, CakeIcon, UserGroupIcon, BeakerIcon, ExclamationTriangleIcon, ChartBarIcon, EyeDropperIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 
 export default async function EntriesTable({
   query,
@@ -10,6 +12,48 @@ export default async function EntriesTable({
   currentPage: number;
 }) {
   const entries: Entry[] = await fetchFilteredEntries(query, currentPage);
+
+  const enum Type {
+    ORT,
+    MOTIVATION,
+    SPEISEN,
+    GETRAENKE,
+    BESCHWERDEN,
+    STUHLVERHALTEN,
+    THEARPIE,
+    ANMERKUNGEN
+  }
+
+  function getIconForType(type: Type) {
+    let icon = <></>;
+    const className = "pointer-events-none left-3 top-1/2 h-[22px] w-[22px] mr-4 text-gray-500 peer-focus:text-gray-900 content-center"
+
+    switch (type) {
+      case Type.ORT: icon = <HomeIcon className={className} />; break
+      case Type.MOTIVATION: icon = <UserGroupIcon className={className} />; break
+      case Type.SPEISEN: icon = <CakeIcon className={className} />; break
+      case Type.GETRAENKE: icon = <BeakerIcon className={className} />; break
+      case Type.BESCHWERDEN: icon = <ExclamationTriangleIcon className={className} />; break
+      case Type.STUHLVERHALTEN: icon = <ChartBarIcon className={className} />; break
+      case Type.THEARPIE: icon = <EyeDropperIcon className={className} />; break
+      case Type.ANMERKUNGEN: icon = <ClipboardDocumentCheckIcon className={className} />; break
+    }
+    return icon;
+  }
+
+  function SmallEntry({ type, value }: { type: Type, value: string }) {
+    if (value === "") {
+      return <></>;
+    }
+
+    let icon = getIconForType(type);
+
+    return (
+      <div>
+        <p className="font-medium flex flex-row">{icon}{value}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6 flow-root">
@@ -30,18 +74,18 @@ export default async function EntriesTable({
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="font-medium">{entry.ort}</p>
-                    <p className="font-medium">{entry.motivation}</p>
-                    <p className="font-medium">{entry.speisen}</p>
-                    <p className="font-medium">{entry.getraenke}</p>
-                    <p className="font-medium">{entry.beschwerden}</p>
-                    <p className="font-medium">
+                    <SmallEntry type={Type.ORT} value={entry.ort} />
+                    <SmallEntry type={Type.MOTIVATION} value={entry.motivation} />
+                    <SmallEntry type={Type.SPEISEN} value={entry.speisen} />
+                    <SmallEntry type={Type.GETRAENKE} value={entry.getraenke} />
+                    <SmallEntry type={Type.BESCHWERDEN} value={entry.beschwerden} />
+                    <SmallEntry type={Type.STUHLVERHALTEN} value=
                       {entry.stuhltyp > 0
                         ? `Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}`
                         : ""}
-                    </p>
-                    <p className="font-medium">{entry.therapie}</p>
-                    <p className="font-medium">{entry.anmerkungen}</p>
+                    />
+                    <SmallEntry type={Type.THEARPIE} value={entry.therapie} />
+                    <SmallEntry type={Type.ANMERKUNGEN} value={entry.anmerkungen} />
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateEntry id={entry.id} />
