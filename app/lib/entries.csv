@@ -1,4 +1,5 @@
 id,datum,uhrzeit,ort,motivation,speisen,getraenke,beschwerden,stuhltyp,stuhlverhalten,therapie,anmerkungen
-860df89f-2c84-4f54-b6ad-1028fab53942,2024-05-25,17:43:26,Zuhause,,Nix,,,0,,,
+268b01f1-ef72-42be-ab39-c540d8da4a9e,2024-05-26,20:03:06,Zuhause,Normal,Nix,Nix,Keine,2,Super,Keine,Passt alles
+860df89f-2c84-4f54-b6ad-1028fab53942,2024-05-25,17:43:26,,Normal,Nix,,,0,,,
 c8df4c3d-ea9a-42d1-9039-02b9d1b1b7cc,2024-05-25,17:38:59,Zuhause,Normal,Nix,Nix,Keine,2,Super,Keine,Passt alles
-e1eab30f-5481-4d1c-b4f2-8a8688275a86,2024-05-26,13:49:39,Zuhause,Normal,Nix,Nix,Keine,6,Super,Keine,Passt alles
+f53d75aa-49ce-4107-bbbb-f1a5028a2fd2,2024-04-11,20:29:00,Zuhause,Normal,Nix,Nix,Keine,2,Super,Keine,Passt alles

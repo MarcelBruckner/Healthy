@@ -12,19 +12,6 @@ export function readJsonFile(path: string) {
   return values;
 }
 
-export async function fetchRevenue() {
-  // Add noStore() here to prevent the response from being cached.
-  // This is equivalent to in fetch(..., {cache: "no-store"}).
-  noStore();
-
-  try {
-    return readJsonFile("./app/lib/revenue.json");
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch revenue data.");
-  }
-}
-
 export async function fetchCustomers(): Promise<Customer[]> {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: "no-store"}).

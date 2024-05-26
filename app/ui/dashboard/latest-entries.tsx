@@ -1,11 +1,17 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import Image from "next/image";
 import { lusitana } from "@/app/ui/fonts";
-import { fetchEntries, fetchLatestEntries } from "@/app/lib/data";
+import { fetchLatestEntries } from "@/app/lib/data";
 
 export default async function LatestEntries() {
   const latestEntries = await fetchLatestEntries();
+
+  function Value({ value }: { value: string }) {
+    if (value === "") {
+      return <></>;
+    }
+    return <span className="mr-2">{value}</span>;
+  }
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
@@ -27,34 +33,25 @@ export default async function LatestEntries() {
               >
                 <div className="flex items-center">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      {entry.ort}
+                    <p className="truncate text-sm font-semibold md:text-base flex flex-row">
+                      <Value value={entry.datum} />
+                      <Value value={entry.uhrzeit} />
+                      <Value value={entry.ort} />
                     </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {entry.motivation}
+                    <p className="hidden text-sm text-gray-500 sm:block flew flex-row">
+                      <Value value={entry.motivation} />
+                      <Value value={entry.speisen} />
+                      <Value value={entry.getraenke} />
+                      <Value value={entry.beschwerden} />
                     </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {entry.speisen}
-                    </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {entry.getraenke}
-                    </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {entry.beschwerden}
-                    </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      Typ {entry.stuhltyp}: {entry.stuhlverhalten}
-                    </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {entry.therapie}
-                    </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {entry.anmerkungen}
+                    <p className="hidden text-sm text-gray-500 sm:block flew flex-row">
+                      <Value value={`Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}`} />
+                      <Value value={entry.therapie} />
+                      <Value value={entry.anmerkungen} />
                     </p>
                   </div>
                 </div>
                 <p className={`${lusitana.className} truncate text-sm font-medium md:text-base`}>
-                  {entry.stuhltyp}
                 </p>
               </div>
             );

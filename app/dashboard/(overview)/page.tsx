@@ -1,9 +1,9 @@
-import RevenueChart from "@/app/ui/dashboard/revenue-chart";
-import LatestEntries from "@/app/ui/dashboard/latest-invoices";
+import EntryChart from "@/app/ui/dashboard/entry-chart";
+import LatestEntries from "@/app/ui/dashboard/latest-entries";
 import { lusitana } from "@/app/ui/fonts";
 import { Suspense } from "react";
 import {
-  RevenueChartSkeleton,
+  EntryChartSkeleton,
   LatestEntriesSkeleton,
   CardsSkeleton
 } from "@/app/ui/skeletons";
@@ -21,8 +21,8 @@ export default async function Page() {
         </Suspense>
       </div>
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart />
+        <Suspense fallback={<EntryChartSkeleton />}>
+          <EntryChart />
         </Suspense>
         <Suspense fallback={<LatestEntriesSkeleton />}>
           <LatestEntries />

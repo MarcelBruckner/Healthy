@@ -1,4 +1,7 @@
-import { Revenue } from "./definitions";
+import moment from "moment";
+import { Entry, Revenue } from "./definitions";
+import groupBy from "lodash/groupBy";
+import { Dictionary } from "lodash";
 
 export const formatCurrency = (amount: number | string) => {
   return (+amount / 100).toLocaleString("en-US", {
@@ -21,15 +24,38 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
-export const generateYAxis = (revenue: Revenue[]) => {
-  // Calculate what labels we need to display on the y-axis
-  // based on highest record and in 1000s
-  const yAxisLabels = [];
-  const highestRecord = Math.max(...revenue.map(month => month.revenue));
-  const topLabel = Math.ceil(highestRecord / 1000) * 1000;
+export function groupEntriesByMonth(entries: Entry[]) {
+  const sortedGroups = Object.entries(
+    groupBy(entries, (entry: Entry) => {
+      return moment(entry.datum, "YYYY-MM-DD").format("YYYY MM");
+    })
+  ).sort((a, b) => (a[0] < b[0] ? 1 : -1));
 
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`);
+  const knownMonths = sortedGroups.map(entry => entry[0]);
+
+  for (let i = 0; i < 12; i++) {
+    const month = moment(sortedGroups[0][0], "YYYY MM")
+      .subtract(i, "months")
+      .format("YYYY MM");
+    if (knownMonths.includes(month)) {
+      continue;
+    }
+    sortedGroups.push([month, []]);
+  }
+
+  return sortedGroups.sort((a, b) => (a[0] > b[0] ? 1 : -1));
+}
+
+export const generateYAxis = (entries: Entry[]) => {
+  const groupsByMonth = groupEntriesByMonth(entries);
+
+  const topLabel = Math.max(
+    ...Object.values(groupsByMonth).map(x => x[1].length)
+  );
+
+  const yAxisLabels = [];
+  for (let i = topLabel; i >= 0; i -= 10) {
+    yAxisLabels.push(i);
   }
 
   return { yAxisLabels, topLabel };
