@@ -12,14 +12,14 @@ import { fetchEntries } from "@/app/lib/data";
 export default async function EntryChart() {
   const entries = await fetchEntries(); // Fetch data inside the component
 
-  const chartHeight = 450;
-  // NOTE: comment in this code when you get to this point in the course
-
-  const { yAxisLabels, topLabel } = generateYAxis(entries);
-
   if (!entries || entries.length === 0) {
     return <p className="mt-4 text-gray-400">Keine Einträge vorhanden.</p>;
   }
+
+  const chartHeight = 450;
+
+  const { yAxisLabels, topLabel } = generateYAxis(entries);
+
 
   function Bar({ month, value }: { month: string, value: number }) {
     return <div key={month} className="flex flex-col items-center gap-2">
@@ -51,8 +51,8 @@ export default async function EntryChart() {
             ))}
           </div>
 
-          {groupEntriesByMonth(entries).map(entry => (
-            <Bar month={entry[0]} value={entry[1].length} />
+          {groupEntriesByMonth(entries).map((entry, index) => (
+            <Bar key={index} month={entry[0]} value={entry[1].length} />
           ))}
         </div>
 

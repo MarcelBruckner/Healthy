@@ -1,12 +1,24 @@
 import { sql } from "@vercel/postgres";
 import { CustomersTableType, User, Customer, Entry } from "./definitions";
 import { formatCurrency } from "./utils";
-import fs from "node:fs";
+import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
-import { parse, stringify } from "csv";
+const { stringify } = require("csv-stringify/sync");
+const { parse } = require("csv-parse");
 
-export function readJsonFile(path: string) {
-  const fileContent = fs.readFileSync(path, "utf8");
+function getDataPath() {
+  if (process.env.DATA_PATH) {
+    return process.env.DATA_PATH;
+  }
+  return "./data";
+}
+
+const ENTRIES_CSV = `${getDataPath()}/entries.csv`;
+
+export async function readJsonFile(path: string) {
+  noStore();
+
+  const fileContent = await fs.readFile(path, "utf8");
   var values = JSON.parse(fileContent);
   // console.log(values);
   return values;
@@ -18,7 +30,7 @@ export async function fetchCustomers(): Promise<Customer[]> {
   noStore();
 
   try {
-    return readJsonFile("./app/lib/customers.json");
+    return await readJsonFile("./app/lib/customers.json");
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch revenue data.");
@@ -49,7 +61,9 @@ export async function fetchCardData() {
   }
 }
 
-async function fetchFilteredEntriesUnpaginated(query: string) {
+async function fetchFilteredEntriesUnpaginated(
+  query: string
+): Promise<Entry[]> {
   noStore();
 
   try {
@@ -163,39 +177,28 @@ export async function getUser(email: string) {
 
 export async function writeEntries(entries: Entry[]): Promise<void> {
   try {
-    return new Promise((resolve, reject) => {
-      stringify(
-        entries,
-        {
-          header: true,
-          columns: {
-            id: "id",
-            datum: "datum",
-            uhrzeit: "uhrzeit",
-            ort: "ort",
-            motivation: "motivation",
-            speisen: "speisen",
-            getraenke: "getraenke",
-            beschwerden: "beschwerden",
-            stuhltyp: "stuhltyp",
-            stuhlverhalten: "stuhlverhalten",
-            therapie: "therapie",
-            anmerkungen: "anmerkungen"
-          }
-        },
-        (err: Error | undefined, output: string) => {
-          if (err) {
-            throw err;
-          }
-          fs.writeFile("./app/lib/entries.csv", output, err => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
-          });
-        }
-      );
+    const content = stringify(entries, {
+      header: true,
+      columns: {
+        id: "id",
+        datum: "datum",
+        uhrzeit: "uhrzeit",
+        ort: "ort",
+        motivation: "motivation",
+        speisen: "speisen",
+        getraenke: "getraenke",
+        beschwerden: "beschwerden",
+        stuhltyp: "stuhltyp",
+        stuhlverhalten: "stuhlverhalten",
+        therapie: "therapie",
+        anmerkungen: "anmerkungen"
+      }
+    });
+
+    return fs.writeFile(ENTRIES_CSV, content, {
+      encoding: "utf8",
+      flag: "w",
+      mode: 0o666
     });
   } catch (error) {
     console.error("Failed to write entries:", error);
@@ -204,50 +207,39 @@ export async function writeEntries(entries: Entry[]): Promise<void> {
 }
 
 export async function fetchLatestEntries(): Promise<Entry[]> {
-  return (await fetchEntries()).slice(0, 5);
+  const allEntries = await fetchEntries();
+  return allEntries.slice(0, 5);
 }
 
 export async function fetchEntries(): Promise<Entry[]> {
+  let content = "";
+  try {
+    content = await fs.readFile(ENTRIES_CSV, "utf-8");
+  } catch (err) {
+    return [];
+  }
+
   try {
     return new Promise((resolve, reject) => {
-      const entries: Entry[] = [];
-      fs.createReadStream("./app/lib/entries.csv")
-        .pipe(parse({ delimiter: ",", from_line: 2 }))
-        .on("data", row => {
-          const entry: Entry = {
-            id: row[0],
-            datum: row[1],
-            uhrzeit: row[2],
-            ort: row[3],
-            motivation: row[4],
-            speisen: row[5],
-            getraenke: row[6],
-            beschwerden: row[7],
-            stuhltyp: row[8],
-            stuhlverhalten: row[9],
-            therapie: row[10],
-            anmerkungen: row[11]
-          };
-          entries.push(entry);
-        })
-        .on("end", function () {
-          console.log("finished");
-          resolve(
-            entries.sort((a, b) => {
-              if (a.datum > b.datum) {
-                return -1;
-              } else if (a.datum < b.datum) {
-                return 1;
-              } else {
-                return a.uhrzeit > b.uhrzeit ? -1 : 1;
-              }
-            })
-          );
-        })
-        .on("error", function (error) {
-          console.log(error.message);
-          reject(error);
-        });
+      parse(
+        content,
+        { columns: true, trim: true },
+        (err: Error, rows: Entry[]) => {
+          if (err) {
+            reject(err);
+          }
+          const entries = rows.sort((a, b) => {
+            if (a.datum > b.datum) {
+              return -1;
+            } else if (a.datum < b.datum) {
+              return 1;
+            } else {
+              return a.uhrzeit > b.uhrzeit ? -1 : 1;
+            }
+          });
+          resolve(entries);
+        }
+      );
     });
   } catch (error) {
     console.error("Failed to fetch entries:", error);

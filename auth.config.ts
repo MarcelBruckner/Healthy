@@ -4,6 +4,8 @@ export const authConfig = {
   pages: {
     signIn: "/login"
   },
+  // TODO https://stackoverflow.com/questions/77503558/nextauth-5-host-must-be-trusted
+  trustHost: true,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;

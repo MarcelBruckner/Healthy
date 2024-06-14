@@ -23,7 +23,7 @@ export default function Page() {
     const src = `/poop-scala/typ${index + 1}.png`
     const alt = `Typ ${index}: ${scala[index]}`
 
-    return < div className="mb-4 flex flex-row" >
+    return < div key={alt} className="mb-4 flex flex-row" >
       <Image className="left-3 mr-3" src={src} alt={alt} width="100" height="100" />
       <div className="flex flex-row h-auto ">
         <p className="font-bold mr-4 h-full content-center">Typ {index + 1}:</p> <p className="h-full content-center">{scala[index]}</p>
@@ -61,7 +61,7 @@ export default function Page() {
         <h2 className={`${lusitana.className} mb-4 text-xl md:text-xl`}>
           Bristol-Stuhlformen-Skala
         </h2>
-        {scala.map((entry, index) => <ScalaEntry index={index} />)}
+        {scala.map((entry, index) => <ScalaEntry key={index} index={index} />)}
       </p>
 
       <div>
