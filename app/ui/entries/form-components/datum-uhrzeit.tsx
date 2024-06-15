@@ -12,9 +12,9 @@ export default async function DatumUhrzeit({ state, datum, uhrzeit }: { state: S
         uhrzeit = moment().format("HH:mm:ss");
     }
 
-    return (
-        < div className="mb-4 flex flex-row" >
-            <div className="mr-4">
+    function DatumForm() {
+        return (
+            <div>
                 <label htmlFor="datum" className="mb-2 block text-sm font-medium">
                     Datum
                 </label>
@@ -41,8 +41,11 @@ export default async function DatumUhrzeit({ state, datum, uhrzeit }: { state: S
                         ))}
                 </div>
             </div>
+        );
+    }
 
-            {/* Uhrzeit */}
+    function UhrzeitForm() {
+        return (
             <div>
                 <label htmlFor="uhrzeit" className="mb-2 block text-sm font-medium">
                     Uhrzeit
@@ -70,6 +73,30 @@ export default async function DatumUhrzeit({ state, datum, uhrzeit }: { state: S
                             </p>
                         ))}
                 </div>
+            </div>
+        )
+    }
+
+    return (
+        <div>
+            <div className="hidden sm:block">
+                <div className="mb-4 flex flex-row">
+                    <div className="mr-4">
+                        <DatumForm />
+                    </div>
+
+                    <UhrzeitForm />
+                </div >
+            </div>
+
+            <div className="sm:hidden">
+                <div className="mb-4">
+                    <DatumForm />
+                </div >
+
+                <div className="mb-4">
+                    <UhrzeitForm />
+                </div >
             </div>
         </div >
     );

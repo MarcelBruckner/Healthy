@@ -5,9 +5,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default async function Stuhlverhalten({ state, stuhltyp, stuhlverhalten }: { state: State, stuhltyp?: number, stuhlverhalten?: string }) {
-    return (
-        <div className="mb-4 flex flex-row">
-            <div className="mr-4">
+    function StuhltypForm() {
+        return (
+            <div>
                 <label
                     htmlFor="stuhltyp"
                     className="mb-2 block text-sm font-medium"
@@ -48,8 +48,11 @@ export default async function Stuhlverhalten({ state, stuhltyp, stuhlverhalten }
                         ))}
                 </div>
             </div>
+        )
+    }
 
-            {/* Stuhlverhalten */}
+    function StuhlverhaltenForm() {
+        return (
             <div className="w-full">
                 <label
                     htmlFor="stuhlverhalten"
@@ -84,6 +87,30 @@ export default async function Stuhlverhalten({ state, stuhltyp, stuhlverhalten }
                         ))}
                 </div>
             </div>
-        </div>
+        )
+    }
+
+    return (
+        <div>
+            <div className="hidden sm:block">
+                <div className="mb-4 flex flex-row">
+                    <div className="mr-4">
+                        <StuhltypForm />
+                    </div>
+
+                    <StuhlverhaltenForm />
+                </div >
+            </div>
+
+            <div className="sm:hidden">
+                <div className="mb-4">
+                    <StuhltypForm />
+                </div >
+
+                <div className="mb-4">
+                    <StuhlverhaltenForm />
+                </div >
+            </div>
+        </div >
     );
 }
