@@ -9,6 +9,10 @@
 
 name: Publish Docker image
 
+env:
+  REGISTRY: marcelbruckner
+  IMAGE_NAME: healthy
+
 on:
   push:
     branches: ["main"]
