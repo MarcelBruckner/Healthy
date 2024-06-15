@@ -1,6 +1,5 @@
 import "@/app/ui/global.css";
 import { inter } from "@/app/ui/fonts";
-import { lusitana } from "@/app/ui/fonts";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
@@ -19,7 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="de">
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="shortcut icon" href="/favicon/favicon.ico" />
+        {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=optional" /> */}
+      </head>
       <AppRouterCacheProvider>
         <body className={`${inter.className} antialiased`}>{children}</body>
       </AppRouterCacheProvider>

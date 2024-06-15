@@ -16,6 +16,9 @@ RUN \
     fi
 
 
+ENV DATA_PATH "/data"
+ENV NODE_ENV production
+
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
@@ -38,9 +41,6 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-ENV DATA_PATH "/data"
-ENV NODE_ENV production
-# ENV NODE_ENV development
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1

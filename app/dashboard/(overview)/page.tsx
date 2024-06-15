@@ -10,7 +10,7 @@ import {
 import CardWrapper from "@/app/ui/dashboard/cards";
 
 export default async function Page() {
-  console.log(process.env);
+  // console.log(process.env);
 
   return (
     <main>
