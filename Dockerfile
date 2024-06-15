@@ -62,7 +62,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Set the correct permission for data path
 RUN mkdir /data
 RUN chown nextjs:nodejs /data
-RUN chmod 777 /data
+RUN chmod -R 777 /data
 
 USER nextjs
 
