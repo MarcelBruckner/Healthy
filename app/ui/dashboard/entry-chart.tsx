@@ -24,7 +24,7 @@ export default async function EntryChart() {
   function Bar({ month, value }: { month: string, value: number }) {
     return <div key={month} className="flex flex-col items-center gap-2">
       <div
-        className="w-full rounded-md bg-blue-300"
+        className="w-full rounded-md bg-brand-300"
         style={{
           height: `${(chartHeight / topLabel) * value}px`
         }}

@@ -5,11 +5,11 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Acme Dashboard",
-    default: "Acme Dashboard"
+    template: "%s | Healthy",
+    default: "Healthy"
   },
-  description: "The official Next.js Course Dashboard, built with App Router.",
-  metadataBase: new URL("https://next-learn-dashboard.vercel.sh")
+  description: "Healthy - A self-hosted tracker for your health, eating habits and poop behavior.",
+  metadataBase: new URL("https://github.com/MarcelBruckner/Healthy")
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de">
+    <html lang="de" className="light">
       <head>
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />

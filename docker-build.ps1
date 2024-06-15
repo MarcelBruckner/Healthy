@@ -1,2 +1,2 @@
-docker build -t marcelbruckner/pooptracker .
-docker push marcelbruckner/pooptracker
+docker build -t marcelbruckner/healthy .
+docker push marcelbruckner/healthy

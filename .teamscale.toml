@@ -23,7 +23,7 @@ url = "https://teamscale.marcelbruckner.info/" # Optional, but must be set in th
 # explicitly, then it implicitly sets project.path = "" (i.e., associates the
 # current folder with the root folder of the Teamscale project).
 
-id = "pooptracker" # Optional, but must be set in the merged configuration
+id = "healthy" # Optional, but must be set in the merged configuration
 
 # The branch to use for retrieving data from the server.
 # 
