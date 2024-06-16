@@ -47,6 +47,7 @@ ENV NODE_ENV production
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
@@ -55,10 +56,6 @@ RUN mkdir .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-
-# CUSTOM STUFF
-ENV DATA_PATH "/data"
-RUN mkdir "/data"
 
 EXPOSE 3000
 
