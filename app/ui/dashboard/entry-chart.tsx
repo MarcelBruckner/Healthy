@@ -1,7 +1,7 @@
 import { generateYAxis, groupEntriesByMonth } from "@/app/lib/utils";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "@/app/ui/fonts";
-import { fetchEntries } from "@/app/lib/data";
+import { fetchFilteredFoods, fetchFoods } from "@/app/lib/data";
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -10,7 +10,7 @@ import { fetchEntries } from "@/app/lib/data";
 // https://airbnb.io/visx/
 
 export default async function EntryChart() {
-  const entries = await fetchEntries(); // Fetch data inside the component
+  const entries = await fetchFoods(); // Fetch data inside the component
 
   if (!entries || entries.length === 0) {
     return <p className="mt-4 text-gray-400">Keine Einträge vorhanden.</p>;

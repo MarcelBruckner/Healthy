@@ -1,11 +1,11 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { lusitana } from "@/app/ui/fonts";
-import { fetchLatestEntries } from "@/app/lib/data";
+import { fetchLatestFoods } from "@/app/lib/data";
 import { formatDatetime } from "@/app/lib/utils";
 
 export default async function LatestEntries() {
-  const latestEntries = await fetchLatestEntries();
+  const latestEntries = await fetchLatestFoods();
 
   function Value({ value }: { value: string }) {
     if (value === "") {
@@ -44,11 +44,7 @@ export default async function LatestEntries() {
                       <Value value={entry.getraenke} />
                       <Value value={entry.beschwerden} />
                     </p>
-                    <p className="hidden text-sm text-gray-500 sm:block flew flex-row">
-                      <Value value={`Typ ${entry.stuhltyp}: ${entry.stuhlverhalten}`} />
-                      <Value value={entry.therapie} />
-                      <Value value={entry.anmerkungen} />
-                    </p>
+
                   </div>
                 </div>
                 <p className={`${lusitana.className} truncate text-sm font-medium md:text-base`}>

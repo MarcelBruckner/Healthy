@@ -3,7 +3,8 @@
 import {
   InformationCircleIcon,
   HomeIcon,
-  DocumentDuplicateIcon
+  DocumentDuplicateIcon,
+  CakeIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,9 +15,9 @@ import clsx from "clsx";
 const links = [
   { name: "Home", href: "/dashboard", icon: HomeIcon },
   {
-    name: "Einträge",
-    href: "/dashboard/entries",
-    icon: DocumentDuplicateIcon
+    name: "Essen und Trinken",
+    href: "/dashboard/food",
+    icon: CakeIcon
   },
   { name: "Infos", href: "/dashboard/infos", icon: InformationCircleIcon }
 ];

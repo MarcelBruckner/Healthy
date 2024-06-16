@@ -1,11 +1,10 @@
 "use server";
 import { z } from "zod";
-import { Entry } from "./definitions";
+import { Food } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
-import { fetchEntries, writeEntries } from "./data";
 import moment from "moment";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import prisma from "./prisma";
@@ -28,7 +27,7 @@ const POOP_ERROR = {
   stuhlverhalten: ["Bitte das Stuhlverhalten angeben."]
 };
 
-export type State = {
+export type StateFood = {
   errors?: {
     datum?: string[];
     uhrzeit?: string[];
@@ -37,15 +36,21 @@ export type State = {
     speisen?: string[];
     getraenke?: string[];
     beschwerden?: string[];
-    stuhltyp?: string[];
-    stuhlverhalten?: string[];
-    therapie?: string[];
-    anmerkungen?: string[];
   };
   message?: string | null;
 };
 
-const FormSchema = z.object({
+export type StatePoop = {
+  errors?: {
+    anmerkungen?: string[];
+    stuhltyp?: string[];
+    stuhlverhalten?: string[];
+    therapie?: string[];
+  };
+  message?: string | null;
+};
+
+const FormSchemaFood = z.object({
   id: z.string(),
   datum: z.string().date(),
   uhrzeit: z.string().time(),
@@ -53,32 +58,23 @@ const FormSchema = z.object({
   motivation: z.string(),
   speisen: z.string(),
   getraenke: z.string(),
-  beschwerden: z.string(),
-  stuhltyp: z.coerce.number(),
-  stuhlverhalten: z.string(),
-  therapie: z.string(),
-  anmerkungen: z.string()
+  beschwerden: z.string()
 });
 
-const CreateInvoice = FormSchema.omit({ id: true });
-const UpdateInvoice = FormSchema.omit({ id: true });
+const CreateFood = FormSchemaFood.omit({ id: true });
 
-function validateFormData(formData: FormData, id?: string): State | Entry {
-  let validatedFields = CreateInvoice.safeParse({
+function validateFormData(formData: FormData): Food {
+  let validatedFields = CreateFood.safeParse({
     datum: formData.get("datum"),
     uhrzeit: formData.get("uhrzeit"),
     ort: formData.get("ort"),
     motivation: formData.get("motivation"),
     speisen: formData.get("speisen"),
     getraenke: formData.get("getraenke"),
-    beschwerden: formData.get("beschwerden"),
-    stuhltyp: formData.get("stuhltyp"),
-    stuhlverhalten: formData.get("stuhlverhalten"),
-    therapie: formData.get("therapie"),
-    anmerkungen: formData.get("anmerkungen")
+    beschwerden: formData.get("beschwerden")
   });
   if (!validatedFields.success) {
-    return {
+    throw {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Beim Extrahieren der Daten ist ein Fehler aufgetreten!"
     };
@@ -90,122 +86,83 @@ function validateFormData(formData: FormData, id?: string): State | Entry {
   );
 
   if (datetime.isAfter(Date.now())) {
-    return {
+    throw {
       errors: Object.assign({}, DATETIME_ERROR),
       message: "Das Datum darf nicht in der Zukunft liegen!"
     };
   }
 
-  if (!hasFoodAndDrinks(validatedFields) && !hasPoop(validatedFields)) {
-    return {
-      errors: Object.assign({}, FOOD_AND_DRINKS_ERROR, POOP_ERROR),
-      message: "Entweder eine Mahlzeit oder Stuhlgang eintragen!"
-    };
-  }
-
-  if (
-    hasFoodAndDrinks(validatedFields) &&
-    !hasValidFoodAndDrinks(validatedFields)
-  ) {
-    return {
+  if (!validatedFields.data.getraenke && !validatedFields.data.speisen) {
+    throw {
       errors: getFoodAndDrinksError(validatedFields),
-      message: "Mahlzeit ist nicht vollständig!"
+      message: "Essen und Trinken ist nicht vollständig!"
     };
   }
 
-  if (hasPoop(validatedFields) && !hasValidPoop(validatedFields)) {
-    return {
-      errors: getPoopError(validatedFields),
-      message: "Stuhlgang ist nicht vollständig!"
-    };
-  }
-
-  let entry: Entry = {
+  let food: Food = {
     datetime: datetime.toDate(),
     ort: validatedFields.data.ort,
     motivation: validatedFields.data.motivation,
     speisen: validatedFields.data.speisen,
     getraenke: validatedFields.data.getraenke,
-    beschwerden: validatedFields.data.beschwerden,
-    stuhltyp: validatedFields.data.stuhltyp,
-    stuhlverhalten: validatedFields.data.stuhlverhalten,
-    therapie: validatedFields.data.therapie,
-    anmerkungen: validatedFields.data.anmerkungen
+    beschwerden: validatedFields.data.beschwerden
   };
-  return entry;
+  return food;
 }
 
-function isEntry(data: State | Entry): data is Entry {
-  return (<Entry>data).stuhltyp !== undefined;
+function isFood(data: StateFood | Food): data is Food {
+  return (<Food>data).speisen !== undefined;
 }
 
-export async function createEntry(prevState: State, formData: FormData) {
-  const validatedFields = validateFormData(formData);
-  if (!isEntry(validatedFields)) {
-    return validatedFields;
-  }
-
-  try {
-    await prisma?.entry.create({ data: validatedFields });
-  } catch (error) {
+function handleFoodError(err: any) {
+  if (err instanceof PrismaClientValidationError) {
     return {
       message:
         "Database Error: Failed to Create Entry." +
-        (error as PrismaClientValidationError).message
+        (err as PrismaClientValidationError).message
     };
   }
-  revalidatePath("/dashboard/entries");
-  redirect("/dashboard/entries");
+  return err as StateFood;
 }
 
-export async function updateEntry(
-  id: string,
-  prevState: State,
-  formData: FormData
-) {
-  const validatedFields = validateFormData(formData, id);
-  if (!isEntry(validatedFields)) {
-    return validatedFields;
-  }
-
+export async function createFood(prevState: StateFood, formData: FormData) {
   try {
-    await prisma?.entry.update({ where: { id: id }, data: validatedFields });
-  } catch (error) {
-    return {
-      message: "Database Error: Failed to Update Entry."
-    };
+    const validatedFields = validateFormData(formData);
+    await prisma?.food.create({ data: validatedFields });
+  } catch (err) {
+    return handleFoodError(err);
   }
-
-  revalidatePath("/dashboard/entries");
-  redirect("/dashboard/entries");
+  revalidatePath("/dashboard/food");
+  redirect("/dashboard/food");
 }
 
-export async function copyEntry(
+export async function updateFood(
   id: string,
-  prevState: State,
+  prevState: StateFood,
   formData: FormData
 ) {
-  const validatedFields = validateFormData(formData);
-  if (!isEntry(validatedFields)) {
-    return validatedFields;
-  }
-
   try {
-    await prisma?.entry.create({ data: validatedFields });
-  } catch (error) {
-    return {
-      message: "Database Error: Failed to Update Entry."
-    };
+    const validatedFields = validateFormData(formData);
+    await prisma?.food.update({ where: { id: id }, data: validatedFields });
+  } catch (err) {
+    return handleFoodError(err);
   }
+  revalidatePath("/dashboard/food");
+  redirect("/dashboard/food");
+}
 
-  revalidatePath("/dashboard/entries");
-  redirect("/dashboard/entries");
+export async function copyFood(
+  id: string,
+  prevState: StateFood,
+  formData: FormData
+) {
+  return createFood(prevState, formData);
 }
 
 export async function deleteInvoice(id: string) {
   try {
-    await prisma?.entry.delete({ where: { id: id } });
-    revalidatePath("/dashboard/entries");
+    await prisma?.food.delete({ where: { id: id } });
+    revalidatePath("/dashboard/food");
     return { message: "Deleted Entry." };
   } catch (error) {
     return {
@@ -284,29 +241,6 @@ function hasValidPoop(
   );
 }
 
-function hasFoodAndDrinks(
-  validatedFields: z.SafeParseSuccess<{
-    datum: string;
-    uhrzeit: string;
-    ort: string;
-    motivation: string;
-    speisen: string;
-    getraenke: string;
-    beschwerden: string;
-    stuhltyp: number;
-    stuhlverhalten: string;
-    therapie: string;
-    anmerkungen: string;
-  }>
-) {
-  return (
-    validatedFields.data?.ort !== "" ||
-    validatedFields.data?.motivation !== "" ||
-    validatedFields.data?.speisen !== "" ||
-    validatedFields.data?.getraenke !== ""
-  );
-}
-
 function getFoodAndDrinksError(
   validatedFields: z.SafeParseSuccess<{
     datum: string;
@@ -316,54 +250,16 @@ function getFoodAndDrinksError(
     speisen: string;
     getraenke: string;
     beschwerden: string;
-    stuhltyp: number;
-    stuhlverhalten: string;
-    therapie: string;
-    anmerkungen: string;
   }>
 ) {
   let result: { [id: string]: string[] } = {};
 
-  if (
-    validatedFields.data?.ort === "" &&
-    validatedFields.data?.motivation === ""
-  ) {
-    result["ort"] = FOOD_AND_DRINKS_ERROR["ort"];
-    result["motivation"] = FOOD_AND_DRINKS_ERROR["motivation"];
-  }
-
-  if (
-    validatedFields.data?.speisen === "" &&
-    validatedFields.data?.getraenke === ""
-  ) {
+  if (!validatedFields.data?.speisen && !validatedFields.data?.getraenke) {
     result["speisen"] = FOOD_AND_DRINKS_ERROR["speisen"];
     result["getraenke"] = FOOD_AND_DRINKS_ERROR["getraenke"];
   }
 
   return result;
-}
-
-function hasValidFoodAndDrinks(
-  validatedFields: z.SafeParseSuccess<{
-    datum: string;
-    uhrzeit: string;
-    ort: string;
-    motivation: string;
-    speisen: string;
-    getraenke: string;
-    beschwerden: string;
-    stuhltyp: number;
-    stuhlverhalten: string;
-    therapie: string;
-    anmerkungen: string;
-  }>
-) {
-  return (
-    (validatedFields.data?.ort !== "" ||
-      validatedFields.data?.motivation !== "") &&
-    (validatedFields.data?.speisen !== "" ||
-      validatedFields.data?.getraenke !== "")
-  );
 }
 
 export async function authenticate(

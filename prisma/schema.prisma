@@ -10,14 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Entry {
+model Food {
+  id          String   @id @default(cuid())
+  datetime    DateTime
+  ort         String
+  motivation  String
+  speisen     String
+  getraenke   String
+  beschwerden String
+}
+
+model Poop {
   id             String   @id @default(cuid())
   datetime       DateTime
-  ort            String
-  motivation     String
-  speisen        String
-  getraenke      String
-  beschwerden    String
   stuhltyp       Int
   stuhlverhalten String
   therapie       String

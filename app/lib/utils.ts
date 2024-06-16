@@ -1,6 +1,6 @@
 import moment from "moment";
-import { Entry } from "./definitions";
 import groupBy from "lodash/groupBy";
+import { Food, FoodDB } from "./definitions";
 
 export const formatCurrency = (amount: number | string) => {
   return (+amount / 100).toLocaleString("en-US", {
@@ -23,9 +23,9 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
-export function groupEntriesByMonth(entries: Entry[]) {
+export function groupEntriesByMonth(entries: Food[]) {
   const sortedGroups = Object.entries(
-    groupBy(entries, (entry: Entry) => {
+    groupBy(entries, (entry: Food) => {
       return moment(entry.datetime, "YYYY-MM-DD").format("YYYY MM");
     })
   ).sort((a, b) => (a[0] < b[0] ? 1 : -1));
@@ -45,7 +45,7 @@ export function groupEntriesByMonth(entries: Entry[]) {
   return sortedGroups.sort((a, b) => (a[0] > b[0] ? 1 : -1));
 }
 
-export const generateYAxis = (entries: Entry[]) => {
+export const generateYAxis = (entries: Food[]) => {
   const groupsByMonth = groupEntriesByMonth(entries);
 
   const topLabel = Math.max(

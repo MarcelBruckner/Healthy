@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { CustomersTableType, User, Customer, Entry } from "./definitions";
+import { Food, FoodDB } from "./definitions";
 import { formatCurrency } from "./utils";
 import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
@@ -25,30 +25,14 @@ export async function readJsonFile(path: string) {
   return values;
 }
 
-export async function fetchCustomers(): Promise<Customer[]> {
-  // Add noStore() here to prevent the response from being cached.
-  // This is equivalent to in fetch(..., {cache: "no-store"}).
-  noStore();
-
-  try {
-    return await readJsonFile("./app/lib/customers.json");
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch revenue data.");
-  }
-}
-
 export async function fetchCardData() {
   noStore();
 
   try {
-    const entries = await fetchEntries();
-    const totalNumberOfEntries = entries.length;
-    const numberOfFoods = entries.filter(entry => entry.speisen !== "").length;
-    const numberOfDrinks = entries.filter(
-      entry => entry.getraenke !== ""
-    ).length;
-    const numberOfPoops = entries.filter(entry => entry.stuhltyp !== 0).length;
+    const totalNumberOfEntries = 0;
+    const numberOfFoods = 0;
+    const numberOfDrinks = 0;
+    const numberOfPoops = 0;
 
     return {
       totalNumberOfEntries,
@@ -62,30 +46,42 @@ export async function fetchCardData() {
   }
 }
 
-async function fetchFilteredEntriesUnpaginated(
-  query: string
-): Promise<Entry[]> {
+async function fetchFilteredFoodsUnpaginated(query: string): Promise<FoodDB[]> {
   noStore();
 
   try {
-    const entries = await fetchEntries();
-
-    const filteredEntries = entries.filter(entry => {
-      return (
-        entry.anmerkungen.indexOf(query) >= 0 ||
-        entry.motivation.indexOf(query) >= 0 ||
-        entry.beschwerden.indexOf(query) >= 0 ||
-        moment(entry.datetime).format("YYYY-MM-DD").indexOf(query) >= 0 ||
-        entry.getraenke.indexOf(query) >= 0 ||
-        entry.ort.indexOf(query) >= 0 ||
-        entry.speisen.indexOf(query) >= 0 ||
-        entry.stuhltyp.toString() === query ||
-        entry.stuhlverhalten.indexOf(query) >= 0 ||
-        entry.therapie.indexOf(query) >= 0 ||
-        moment(entry.datetime).format("HH:mm").indexOf(query) >= 0
-      );
+    return await prisma?.food.findMany({
+      orderBy: { datetime: "desc" },
+      where: {
+        OR: [
+          {
+            motivation: {
+              contains: query
+            }
+          },
+          {
+            beschwerden: {
+              contains: query
+            }
+          },
+          {
+            getraenke: {
+              contains: query
+            }
+          },
+          {
+            ort: {
+              contains: query
+            }
+          },
+          {
+            speisen: {
+              contains: query
+            }
+          }
+        ]
+      }
     });
-    return filteredEntries;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch invoices.");
@@ -93,10 +89,10 @@ async function fetchFilteredEntriesUnpaginated(
 }
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredEntries(query: string, currentPage: number) {
+export async function fetchFilteredFoods(query: string, currentPage: number) {
   try {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const filteredEntries = await fetchFilteredEntriesUnpaginated(query);
+    const filteredEntries = await fetchFilteredFoodsUnpaginated(query);
 
     return filteredEntries.slice(offset, offset + ITEMS_PER_PAGE);
   } catch (error) {
@@ -105,12 +101,12 @@ export async function fetchFilteredEntries(query: string, currentPage: number) {
   }
 }
 
-export async function fetchEntriesPages(query: string) {
+export async function fetchFoodPages(query: string) {
   noStore();
   try {
-    const entries = await fetchFilteredEntriesUnpaginated(query);
+    const foods = await fetchFilteredFoodsUnpaginated(query);
 
-    const totalPages = Math.ceil(Number(entries.length) / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(Number(foods.length) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
     console.error("Database Error:", error);
@@ -118,11 +114,11 @@ export async function fetchEntriesPages(query: string) {
   }
 }
 
-export async function fetchEntryById(id: string) {
+export async function fetchFoodById(id: string) {
   noStore();
 
   try {
-    const entry = await prisma?.entry.findUnique({
+    const entry = await prisma?.food.findUnique({
       where: {
         id: id
       }
@@ -134,106 +130,19 @@ export async function fetchEntryById(id: string) {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
-  noStore();
-  try {
-    const data = await sql<CustomersTableType>`
-		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = "pending" THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = "paid" THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
-	  `;
-
-    const customers = data.rows.map(customer => ({
-      ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid)
-    }));
-
-    return customers;
-  } catch (err) {
-    console.error("Database Error:", err);
-    throw new Error("Failed to fetch customer table.");
-  }
+export async function fetchLatestFoods(): Promise<FoodDB[]> {
+  return (
+    (await prisma?.food.findMany({
+      orderBy: { datetime: "desc" },
+      take: 5
+    })) ?? []
+  );
 }
 
-export async function getUser(email: string) {
-  try {
-    const user = await sql`SELECT * FROM users WHERE email=${email}`;
-    return user.rows[0] as User;
-  } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
-  }
-}
-
-export async function writeEntries(entries: Entry[]): Promise<void> {
-  try {
-    const content = stringify(entries, {
-      header: true,
-      columns: {
-        id: "id",
-        datum: "datum",
-        uhrzeit: "uhrzeit",
-        ort: "ort",
-        motivation: "motivation",
-        speisen: "speisen",
-        getraenke: "getraenke",
-        beschwerden: "beschwerden",
-        stuhltyp: "stuhltyp",
-        stuhlverhalten: "stuhlverhalten",
-        therapie: "therapie",
-        anmerkungen: "anmerkungen"
-      }
-    });
-
-    return fs.writeFile(ENTRIES_CSV, content, {
-      encoding: "utf8",
-      flag: "w",
-      mode: 0o666
-    });
-  } catch (error) {
-    console.error("Failed to write entries:", error);
-    throw new Error("Failed to write entries.");
-  }
-}
-
-export async function fetchLatestEntries(): Promise<Entry[]> {
-  const allEntries = await fetchEntries();
-  return allEntries.slice(0, 5);
-}
-
-function sortByDate(a: Entry, b: Entry) {
-  if (a.datetime > b.datetime) {
-    return -1;
-  } else if (a.datetime < b.datetime) {
-    return 1;
-  }
-  return a.datetime > b.datetime ? -1 : 1;
-}
-
-export async function fetchEntries(): Promise<Entry[]> {
-  noStore();
-
-  try {
-    const entries = await prisma?.entry.findMany();
-    if (!entries) {
-      return [];
-    }
-    return entries.sort(sortByDate);
-  } catch (error) {
-    console.error("Failed to fetch entries:");
-    throw new Error("Failed to fetch entries.");
-  }
+export async function fetchFoods(): Promise<Food[]> {
+  return (
+    (await prisma?.food.findMany({
+      orderBy: { datetime: "desc" }
+    })) ?? []
+  );
 }
