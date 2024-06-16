@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Button } from "../../button";
+import { Button } from "../../../button";
 
-export default async function Buttons({ submit }: { submit: string }) {
+export default async function Buttons({ type, submit }: { type: "food" | "poop", submit: string }) {
     return (
         <div className="mt-6 flex justify-end gap-4">
             <Link
-                href="/dashboard/food"
+                href={`/dashboard/${type}`}
                 className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
                 Abbrechen

@@ -5,6 +5,7 @@ export type Food = {
   speisen: string;
   getraenke: string;
   beschwerden: string;
+  anmerkungen: string;
 };
 
 export type FoodDB = Food & { id: string };
@@ -14,7 +15,6 @@ export type Poop = {
   stuhltyp: number;
   stuhlverhalten: string;
   therapie: string;
-  anmerkungen: string;
 };
 
 export type PoopDB = Poop & { id: string };

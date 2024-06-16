@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "next:build": "next build",
+    "build": "next build",
     "next:dev": "next dev",
-    "next:start": "npm run next:build && next start",
+    "next:start": "npm run build && next start",
     "next:start:test": "npm run prisma:db-push && npm run next:dev",
     "next:lint": "next lint",
     "cypress:open": "cypress open",

@@ -1,12 +1,12 @@
-import Pagination from "@/app/ui/food/pagination";
+import Pagination from "@/app/ui/dashboard/common/pagination";
 import Search from "@/app/ui/search";
-import Table from "@/app/ui/food/table";
-import { CreateFood } from "@/app/ui/food/buttons";
+import Table from "@/app/ui/dashboard/food/table";
 import { lusitana } from "@/app/ui/fonts";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { fetchFoodPages as fetchFoodPages } from "@/app/lib/data";
 import { Metadata } from "next";
+import { CreateButton } from "@/app/ui/dashboard/common/buttons";
 
 export const metadata: Metadata = {
   title: "Essen und Trinken"
@@ -30,9 +30,9 @@ export default async function Page({
       <div className="flex w-full items-center justify-between">
         <h1 className={`${lusitana.className} text-2xl`}>Essen und Trinken</h1>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Durchsuche Essen und Trinken..." />
-        <CreateFood />
+        <CreateButton type="food" />
       </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

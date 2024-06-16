@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { Food } from "./definitions";
+import { Food, Poop } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
@@ -8,6 +8,8 @@ import { AuthError } from "next-auth";
 import moment from "moment";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import prisma from "./prisma";
+import Stuhlverhalten from "../ui/dashboard/poop/form-components/stuhlverhalten";
+import Anmerkungen from "../ui/dashboard/food/form-components/anmerkungen";
 
 const DATETIME_ERROR = {
   datum: ["Das Datum darf nicht in der Zukunft liegen."]
@@ -36,6 +38,7 @@ export type StateFood = {
     speisen?: string[];
     getraenke?: string[];
     beschwerden?: string[];
+    anmerkungen?: string[];
   };
   message?: string | null;
 };
@@ -58,12 +61,36 @@ const FormSchemaFood = z.object({
   motivation: z.string(),
   speisen: z.string(),
   getraenke: z.string(),
-  beschwerden: z.string()
+  beschwerden: z.string(),
+  anmerkungen: z.string()
+});
+
+const FormSchemaPoop = z.object({
+  id: z.string(),
+  datum: z.string().date(),
+  uhrzeit: z.string().time(),
+  stuhltyp: z.coerce.number(),
+  stuhlverhalten: z.string(),
+  therapie: z.string()
 });
 
 const CreateFood = FormSchemaFood.omit({ id: true });
+const CreatePoop = FormSchemaPoop.omit({ id: true });
 
-function validateFormData(formData: FormData): Food {
+function validateDatetime(datum: string, uhrzeit: string) {
+  const datetime = moment(datum + " " + uhrzeit, "YYYY-MM-DD HH:mm");
+
+  if (datetime.isAfter(Date.now())) {
+    throw {
+      errors: Object.assign({}, DATETIME_ERROR),
+      message: "Das Datum darf nicht in der Zukunft liegen!"
+    };
+  }
+
+  return datetime;
+}
+
+function validateFoodFormData(formData: FormData): Food {
   let validatedFields = CreateFood.safeParse({
     datum: formData.get("datum"),
     uhrzeit: formData.get("uhrzeit"),
@@ -71,7 +98,8 @@ function validateFormData(formData: FormData): Food {
     motivation: formData.get("motivation"),
     speisen: formData.get("speisen"),
     getraenke: formData.get("getraenke"),
-    beschwerden: formData.get("beschwerden")
+    beschwerden: formData.get("beschwerden"),
+    anmerkungen: formData.get("anmerkungen")
   });
   if (!validatedFields.success) {
     throw {
@@ -80,17 +108,10 @@ function validateFormData(formData: FormData): Food {
     };
   }
 
-  const datetime = moment(
-    validatedFields.data.datum + " " + validatedFields.data.uhrzeit,
-    "YYYY-MM-DD HH:mm"
+  const datetime = validateDatetime(
+    validatedFields.data.datum,
+    validatedFields.data.uhrzeit
   );
-
-  if (datetime.isAfter(Date.now())) {
-    throw {
-      errors: Object.assign({}, DATETIME_ERROR),
-      message: "Das Datum darf nicht in der Zukunft liegen!"
-    };
-  }
 
   if (!validatedFields.data.getraenke && !validatedFields.data.speisen) {
     throw {
@@ -105,13 +126,46 @@ function validateFormData(formData: FormData): Food {
     motivation: validatedFields.data.motivation,
     speisen: validatedFields.data.speisen,
     getraenke: validatedFields.data.getraenke,
-    beschwerden: validatedFields.data.beschwerden
+    beschwerden: validatedFields.data.beschwerden,
+    anmerkungen: validatedFields.data.anmerkungen
   };
   return food;
 }
 
-function isFood(data: StateFood | Food): data is Food {
-  return (<Food>data).speisen !== undefined;
+function validatePoopFormData(formData: FormData): Poop {
+  let validatedFields = CreatePoop.safeParse({
+    datum: formData.get("datum"),
+    uhrzeit: formData.get("uhrzeit"),
+    stuhltyp: formData.get("stuhltyp"),
+    stuhlverhalten: formData.get("stuhlverhalten"),
+    therapie: formData.get("therapie")
+  });
+  if (!validatedFields.success) {
+    throw {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Beim Extrahieren der Daten ist ein Fehler aufgetreten!"
+    };
+  }
+
+  const datetime = validateDatetime(
+    validatedFields.data.datum,
+    validatedFields.data.uhrzeit
+  );
+
+  if (validatedFields.data.stuhltyp === 0) {
+    throw {
+      errors: getPoopError(validatedFields),
+      message: "Bitte den Stuhltyp angeben. Siehe Infos."
+    };
+  }
+
+  const poop: Poop = {
+    datetime: datetime.toDate(),
+    stuhltyp: validatedFields.data.stuhltyp,
+    stuhlverhalten: validatedFields.data.stuhlverhalten,
+    therapie: validatedFields.data.therapie
+  };
+  return poop;
 }
 
 function handleFoodError(err: any) {
@@ -122,12 +176,23 @@ function handleFoodError(err: any) {
         (err as PrismaClientValidationError).message
     };
   }
-  return err as StateFood;
+
+  if ((err as StateFood).errors?.speisen) {
+    return err as StateFood;
+  }
+
+  if ((err as StatePoop).errors?.stuhltyp) {
+    return err as StatePoop;
+  }
+
+  return {
+    message: "Unkown state error."
+  };
 }
 
 export async function createFood(prevState: StateFood, formData: FormData) {
   try {
-    const validatedFields = validateFormData(formData);
+    const validatedFields = validateFoodFormData(formData);
     await prisma?.food.create({ data: validatedFields });
   } catch (err) {
     return handleFoodError(err);
@@ -136,19 +201,45 @@ export async function createFood(prevState: StateFood, formData: FormData) {
   redirect("/dashboard/food");
 }
 
+export async function createPoop(prevState: StatePoop, formData: FormData) {
+  try {
+    const validatedFields = validatePoopFormData(formData);
+    await prisma?.poop.create({ data: validatedFields });
+  } catch (err) {
+    return handleFoodError(err);
+  }
+  revalidatePath("/dashboard/poop");
+  redirect("/dashboard/poop");
+}
+
 export async function updateFood(
   id: string,
   prevState: StateFood,
   formData: FormData
 ) {
   try {
-    const validatedFields = validateFormData(formData);
+    const validatedFields = validateFoodFormData(formData);
     await prisma?.food.update({ where: { id: id }, data: validatedFields });
   } catch (err) {
     return handleFoodError(err);
   }
   revalidatePath("/dashboard/food");
   redirect("/dashboard/food");
+}
+
+export async function updatePoop(
+  id: string,
+  prevState: StateFood,
+  formData: FormData
+) {
+  try {
+    const validatedFields = validatePoopFormData(formData);
+    await prisma?.poop.update({ where: { id: id }, data: validatedFields });
+  } catch (err) {
+    return handleFoodError(err);
+  }
+  revalidatePath("/dashboard/poop");
+  redirect("/dashboard/poop");
 }
 
 export async function copyFood(
@@ -159,10 +250,29 @@ export async function copyFood(
   return createFood(prevState, formData);
 }
 
-export async function deleteInvoice(id: string) {
+export async function copyPoop(
+  id: string,
+  prevState: StateFood,
+  formData: FormData
+) {
+  return createPoop(prevState, formData);
+}
+
+export async function deleteFood(id: string) {
   try {
     await prisma?.food.delete({ where: { id: id } });
     revalidatePath("/dashboard/food");
+    return { message: "Deleted Entry." };
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Delete Entry."
+    };
+  }
+}
+export async function deletePoop(id: string) {
+  try {
+    await prisma?.poop.delete({ where: { id: id } });
+    revalidatePath("/dashboard/poop");
     return { message: "Deleted Entry." };
   } catch (error) {
     return {
@@ -197,15 +307,9 @@ function getPoopError(
   validatedFields: z.SafeParseSuccess<{
     datum: string;
     uhrzeit: string;
-    ort: string;
-    motivation: string;
-    speisen: string;
-    getraenke: string;
-    beschwerden: string;
     stuhltyp: number;
     stuhlverhalten: string;
     therapie: string;
-    anmerkungen: string;
   }>
 ) {
   let result: { [id: string]: string[] } = {};

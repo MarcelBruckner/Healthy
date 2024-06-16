@@ -1,17 +1,17 @@
-import Form from "@/app/ui/food/edit-form";
-import Breadcrumbs from "@/app/ui/food/breadcrumbs";
-import { fetchFoodById } from "@/app/lib/data";
+import Form from "@/app/ui/dashboard/poop/create-form";
+import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
+import { fetchFoodById, fetchPoopById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Essen und Trinken bearbeiten"
+  title: "Stuhlgang kopieren"
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const food = await fetchFoodById(id);
-  if (!food) {
+  const poop = await fetchPoopById(id);
+  if (!poop) {
     notFound();
   }
 
@@ -21,13 +21,13 @@ export default async function Page({ params }: { params: { id: string } }) {
         breadcrumbs={[
           { label: "Essen und Trinken", href: "/dashboard/food" },
           {
-            label: "Eintrag bearbeiten",
-            href: `/dashboard/food/${id}/edit`,
+            label: "Eintrag kopieren",
+            href: `/dashboard/food/copy`,
             active: true
           }
         ]}
       />
-      <Form food={food} />
+      <Form poop={poop} />
     </main>
   );
 }

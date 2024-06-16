@@ -1,5 +1,5 @@
-import Breadcrumbs from "@/app/ui/food/breadcrumbs";
-import CreateFoodForm from "@/app/ui/food/create-form";
+import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
+import CreateFoodForm from "@/app/ui/dashboard/food/create-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

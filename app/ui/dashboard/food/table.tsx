@@ -1,10 +1,9 @@
-import { EditFood, DeleteEntry, CopyFood } from "@/app/ui/food/buttons";
 import { fetchFilteredFoods } from "@/app/lib/data";
-import { FoodDB } from "@/app/lib/definitions";
-import { ReactComponentElement } from "react";
-import { HomeIcon, CakeIcon, UserGroupIcon, BeakerIcon, ExclamationTriangleIcon, ChartBarIcon, EyeDropperIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
-import moment from "moment";
+import { FoodDB, PoopDB } from "@/app/lib/definitions";
+import { HomeIcon, CakeIcon, UserGroupIcon, BeakerIcon, ExclamationTriangleIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { formatDatetime } from "@/app/lib/utils";
+import { CopyButton, DeleteButton, EditButton } from "../common/buttons";
+import { deleteFood } from "@/app/lib/actions";
 
 export default async function FoodsTable({
   query,
@@ -17,7 +16,7 @@ export default async function FoodsTable({
 
 
   function SmallEntry({ type, value }: {
-    type: "ort" | "motivation" | "speisen" | "getraenke" | "beschwerden", value: string
+    type: "ort" | "motivation" | "speisen" | "getraenke" | "beschwerden" | "anmerkungen", value: string
   }) {
     if (value === "") {
       return <></>;
@@ -30,7 +29,8 @@ export default async function FoodsTable({
       motivation: UserGroupIcon,
       speisen: CakeIcon,
       getraenke: BeakerIcon,
-      beschwerden: ExclamationTriangleIcon
+      beschwerden: ExclamationTriangleIcon,
+      anmerkungen: ClipboardDocumentCheckIcon
     }
     const Icon = MAPPING[type];
 
@@ -67,10 +67,12 @@ export default async function FoodsTable({
                     <SmallEntry type="speisen" value={entry.speisen} />
                     <SmallEntry type="getraenke" value={entry.getraenke} />
                     <SmallEntry type="beschwerden" value={entry.beschwerden} />
+                    <SmallEntry type="anmerkungen" value={entry.anmerkungen} />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <EditFood id={entry.id!} />
-                    <DeleteEntry id={entry.id!} />
+                    <EditButton type="food" id={entry.id!} />
+                    <CopyButton type="food" id={entry.id} />
+                    <DeleteButton type="food" id={entry.id!} deleteFunc={deleteFood} />
                   </div>
                 </div>
               </div>
@@ -96,6 +98,9 @@ export default async function FoodsTable({
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Beschwerden
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Anmerkungen
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -124,11 +129,14 @@ export default async function FoodsTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {entry.beschwerden}
                   </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {entry.anmerkungen}
+                  </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <EditFood id={entry.id} />
-                      <CopyFood id={entry.id} />
-                      <DeleteEntry id={entry.id} />
+                      <EditButton type="food" id={entry.id!} />
+                      <CopyButton type="food" id={entry.id} />
+                      <DeleteButton type="food" id={entry.id!} deleteFunc={deleteFood} />
                     </div>
                   </td>
                 </tr>

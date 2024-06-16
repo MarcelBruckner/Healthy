@@ -1,16 +1,17 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import DatumUhrzeit from "./form-components/datum-uhrzeit";
+import DatumUhrzeit from "../common/form-components/datum-uhrzeit";
 import Ort from "./form-components/ort";
 import Motivation from "./form-components/motivation";
 import Speisen from "./form-components/speisen";
 import Getraenke from "./form-components/getraenke";
 import Beschwerden from "./form-components/beschwerden";
-import Buttons from "./form-components/buttons";
-import Errors from "./form-components/errors";
+import Buttons from "../common/form-components/buttons";
+import Errors from "../common/form-components/errors";
 import { createFood } from "@/app/lib/actions";
 import { FoodDB } from "@/app/lib/definitions";
+import Anmerkungen from "./form-components/anmerkungen";
 
 export default function CreateFoodForm({
   food,
@@ -30,6 +31,7 @@ export default function CreateFoodForm({
           <Speisen state={state} />
           <Getraenke state={state} />
           <Beschwerden state={state} />
+          <Anmerkungen state={state} />
         </> :
           <>
             <Ort state={state} ort={food.ort} />
@@ -37,15 +39,16 @@ export default function CreateFoodForm({
             <Speisen state={state} speisen={food.speisen} />
             <Getraenke state={state} getraenke={food.getraenke} />
             <Beschwerden state={state} beschwerden={food.beschwerden} />
+            <Anmerkungen state={state} anmerkungen={food.anmerkungen} />
           </>
         }
 
         <Errors state={state} />
       </div>
       {!food ?
-        <Buttons submit="Eintrag anlegen" />
+        <Buttons type="food" submit="Eintrag anlegen" />
         :
-        <Buttons submit="Eintrag kopieren" />
+        <Buttons type="food" submit="Eintrag kopieren" />
       }
     </form>
   );

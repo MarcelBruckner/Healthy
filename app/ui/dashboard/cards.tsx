@@ -6,7 +6,8 @@ import {
   ClipboardDocumentIcon,
   CakeIcon,
   BeakerIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  ChevronDoubleDownIcon
 } from "@heroicons/react/24/outline";
 import { lusitana } from "@/app/ui/fonts";
 import { fetchCardData } from "@/app/lib/data";
@@ -14,8 +15,8 @@ import { fetchCardData } from "@/app/lib/data";
 const iconMap = {
   entries: ClipboardDocumentIcon,
   foods: CakeIcon,
-  drinks: BeakerIcon,
-  poops: ExclamationTriangleIcon
+  illness: BeakerIcon,
+  poops: ChevronDoubleDownIcon
 };
 
 export default async function CardWrapper() {
@@ -30,12 +31,12 @@ export default async function CardWrapper() {
     <>
       <Card title="Einträge" value={totalNumberOfEntries} type="entries" />
       <Card title="Essen" value={numberOfFoods} type="foods" />
-      <Card title="Trinken" value={numberOfDrinks} type="drinks" />
       <Card
         title="Stuhlgänge"
         value={numberOfPoops}
         type="poops"
       />
+      <Card title="Erkrankungen" value={numberOfDrinks} type="illness" />
     </>
   );
 }
@@ -47,7 +48,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: "entries" | "foods" | "drinks" | "poops";
+  type: "entries" | "foods" | "illness" | "poops";
 }) {
   const Icon = iconMap[type];
 

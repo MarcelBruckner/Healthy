@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Entry" (
+CREATE TABLE "Food" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "datetime" DATETIME NOT NULL,
     "ort" TEXT NOT NULL,
@@ -7,8 +7,14 @@ CREATE TABLE "Entry" (
     "speisen" TEXT NOT NULL,
     "getraenke" TEXT NOT NULL,
     "beschwerden" TEXT NOT NULL,
+    "anmerkungen" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Poop" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "datetime" DATETIME NOT NULL,
     "stuhltyp" INTEGER NOT NULL,
     "stuhlverhalten" TEXT NOT NULL,
-    "therapie" TEXT NOT NULL,
-    "anmerkungen" TEXT NOT NULL
+    "therapie" TEXT NOT NULL
 );

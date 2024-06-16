@@ -1,11 +1,11 @@
-import Form from "@/app/ui/food/create-form";
-import Breadcrumbs from "@/app/ui/food/breadcrumbs";
+import Form from "@/app/ui/dashboard/food/edit-form";
+import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
 import { fetchFoodById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Eintrag kopieren"
+  title: "Essen und Trinken bearbeiten"
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -21,8 +21,8 @@ export default async function Page({ params }: { params: { id: string } }) {
         breadcrumbs={[
           { label: "Essen und Trinken", href: "/dashboard/food" },
           {
-            label: "Eintrag kopieren",
-            href: `/dashboard/food/copy`,
+            label: "Eintrag bearbeiten",
+            href: `/dashboard/food/${id}/edit`,
             active: true
           }
         ]}

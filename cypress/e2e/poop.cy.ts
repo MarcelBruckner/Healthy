@@ -1,36 +1,36 @@
 import { login } from "./common";
 
-function openFood() {
+function openPoop() {
   // Start from the index page
   cy.visit("http://localhost:3000/");
 
   login();
 
   // Find a link with an href attribute containing "about" and click it
-  cy.get('a[href*="food"]').click();
+  cy.get('a[href*="poop"]').click();
 
   // The new url should include "/about"
-  cy.url().should("include", "/food");
+  cy.url().should("include", "/poop");
 
   // The new page should contain an h1 with "About"
-  cy.get("h1").contains("Essen und Trinken");
+  cy.get("h1").contains("Stuhlgang");
 }
 
-function deleteAllFoods() {
-  cy.get(".delete-food-button").click({ multiple: true, force: true });
+function deleteAllPoops() {
+  cy.get(".delete-poop-button").click({ multiple: true, force: true });
 }
 
-function createFood() {
-  cy.contains("Essen und Trinken anlegen").click();
+function createPoop() {
+  cy.contains("Stuhlgang anlegen").click();
   cy.get("input[name=ort]").type("München");
   cy.get("input[name=motivation]").type("Essen mit Freunden");
   cy.get("input[name=speisen]").type("Spaghetti Bolognese");
   cy.get("input[name=getraenke]").type("1 Flasche Rotwein");
   cy.get("input[name=beschwerden]").type("Suff");
   cy.get("button").contains("Eintrag anlegen").click();
-  cy.url().should("include", "/food");
+  cy.url().should("include", "/poop");
 
-  cy.contains("Essen und Trinken anlegen");
+  cy.contains("Stuhlgang anlegen");
   cy.contains("München");
   cy.contains("Essen mit Freunden");
   cy.contains("Spaghetti Bolognese");
@@ -38,8 +38,8 @@ function createFood() {
   cy.contains("Suff");
 }
 
-function editFood() {
-  cy.get(".edit-food-button").click({ multiple: true, force: true });
+function editPoop() {
+  cy.get(".edit-poop-button").click({ multiple: true, force: true });
 
   cy.get("input[name=ort]").clear();
   cy.get("input[name=ort]").type("Kempten");
@@ -48,8 +48,8 @@ function editFood() {
   cy.contains("Kempten");
 }
 
-function copyFood() {
-  cy.get(".copy-food-button").click({ multiple: true, force: true });
+function copyPoop() {
+  cy.get(".copy-poop-button").click({ multiple: true, force: true });
   cy.get("input[name=ort]").clear();
   cy.get("input[name=ort]").type("München");
   cy.get("button").contains("Eintrag kopieren").click();
@@ -59,27 +59,27 @@ function copyFood() {
 }
 
 describe("Food", () => {
-  it("should complete the whole food entry cycle", () => {
-    openFood();
-    deleteAllFoods();
+  it("should complete the whole poop entry cycle", () => {
+    openPoop();
+    deleteAllPoops();
 
-    createFood();
-    editFood();
-    copyFood();
+    createPoop();
+    editPoop();
+    copyPoop();
 
-    deleteAllFoods();
+    deleteAllPoops();
   });
 
   it("should search", () => {
-    openFood();
+    openPoop();
 
-    createFood();
+    createPoop();
 
-    cy.get("#search").type("München");
-    cy.get("#food-table").contains("München");
+    cy.get("#poop-search").type("München");
+    cy.get("#poop-table").contains("München");
 
-    cy.get("#search").clear();
-    cy.get("#search").type("Kempten");
-    cy.get("#food-table").contains("München").should("not.exist");
+    cy.get("#poop-search").clear();
+    cy.get("#poop-search").type("Kempten");
+    cy.get("#poop-table").contains("München").should("not.exist");
   });
 });

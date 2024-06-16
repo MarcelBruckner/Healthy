@@ -18,6 +18,7 @@ model Food {
   speisen     String
   getraenke   String
   beschwerden String
+  anmerkungen String
 }
 
 model Poop {
@@ -26,5 +27,4 @@ model Poop {
   stuhltyp       Int
   stuhlverhalten String
   therapie       String
-  anmerkungen    String
 }

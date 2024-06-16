@@ -4,7 +4,8 @@ import {
   InformationCircleIcon,
   HomeIcon,
   DocumentDuplicateIcon,
-  CakeIcon
+  CakeIcon,
+  ChevronDoubleDownIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +19,10 @@ const links = [
     name: "Essen und Trinken",
     href: "/dashboard/food",
     icon: CakeIcon
+  }, {
+    name: "Stuhlgang",
+    href: "/dashboard/poop",
+    icon: ChevronDoubleDownIcon
   },
   { name: "Infos", href: "/dashboard/infos", icon: InformationCircleIcon }
 ];

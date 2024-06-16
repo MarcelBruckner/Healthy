@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { Food, FoodDB } from "./definitions";
+import { Food, FoodDB, PoopDB } from "./definitions";
 import { formatCurrency } from "./utils";
 import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
@@ -29,10 +29,11 @@ export async function fetchCardData() {
   noStore();
 
   try {
-    const totalNumberOfEntries = 0;
-    const numberOfFoods = 0;
+    const numberOfFoods = await countFoods();
     const numberOfDrinks = 0;
-    const numberOfPoops = 0;
+    const numberOfPoops = await countPoops();
+
+    const totalNumberOfEntries = numberOfDrinks + numberOfFoods + numberOfPoops;
 
     return {
       totalNumberOfEntries,
@@ -84,21 +85,78 @@ async function fetchFilteredFoodsUnpaginated(query: string): Promise<FoodDB[]> {
     });
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch invoices.");
+    throw new Error("Failed to fetch foods.");
+  }
+}
+
+async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
+  noStore();
+
+  try {
+    return await prisma?.poop.findMany({
+      orderBy: { datetime: "desc" },
+      where: {
+        OR: [
+          {
+            stuhlverhalten: {
+              contains: query
+            }
+          },
+          {
+            stuhltyp: {
+              equals: +query
+            }
+          },
+          {
+            stuhlverhalten: {
+              contains: query
+            }
+          },
+          {
+            therapie: {
+              contains: query
+            }
+          }
+        ]
+      }
+    });
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch poops.");
   }
 }
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredFoods(query: string, currentPage: number) {
+async function fetchFilteredEntries(
+  fetchFunc: (query: string) => Promise<any[]>,
+  query: string,
+  currentPage: number
+) {
   try {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const filteredEntries = await fetchFilteredFoodsUnpaginated(query);
+    const filteredEntries = await fetchFunc(query);
 
     return filteredEntries.slice(offset, offset + ITEMS_PER_PAGE);
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch invoices.");
   }
+}
+
+export async function fetchFilteredFoods(query: string, currentPage: number) {
+  return await fetchFilteredEntries(
+    fetchFilteredFoodsUnpaginated,
+    query,
+    currentPage
+  );
+}
+
+export async function fetchFilteredPoops(query: string, currentPage: number) {
+  return await fetchFilteredEntries(
+    fetchFilteredPoopsUnpaginated,
+    query,
+    currentPage
+  );
 }
 
 export async function fetchFoodPages(query: string) {
@@ -114,11 +172,11 @@ export async function fetchFoodPages(query: string) {
   }
 }
 
-export async function fetchFoodById(id: string) {
+async function fetchById(prismaFunc: any, id: string) {
   noStore();
 
   try {
-    const entry = await prisma?.food.findUnique({
+    const entry = await prismaFunc.findUnique({
       where: {
         id: id
       }
@@ -130,19 +188,78 @@ export async function fetchFoodById(id: string) {
   }
 }
 
-export async function fetchLatestFoods(): Promise<FoodDB[]> {
-  return (
-    (await prisma?.food.findMany({
-      orderBy: { datetime: "desc" },
-      take: 5
-    })) ?? []
-  );
+export async function fetchFoodById(id: string) {
+  return await fetchById(prisma.food, id);
 }
 
-export async function fetchFoods(): Promise<Food[]> {
-  return (
-    (await prisma?.food.findMany({
-      orderBy: { datetime: "desc" }
-    })) ?? []
-  );
+export async function fetchPoopById(id: string) {
+  return await fetchById(prisma.poop, id);
+}
+
+export async function fetchLatestFoods(): Promise<FoodDB[]> {
+  noStore();
+
+  try {
+    return (
+      (await prisma?.food.findMany({
+        orderBy: { datetime: "desc" },
+        take: 5
+      })) ?? []
+    );
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch entry.");
+  }
+}
+
+export async function fetchFoods(): Promise<FoodDB[]> {
+  noStore();
+
+  try {
+    return (
+      (await prisma?.food.findMany({
+        orderBy: { datetime: "desc" }
+      })) ?? []
+    );
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch entry.");
+  }
+}
+
+export async function fetchPoops(): Promise<PoopDB[]> {
+  noStore();
+
+  try {
+    return (
+      (await prisma?.poop.findMany({
+        orderBy: { datetime: "desc" }
+      })) ?? []
+    );
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch entry.");
+  }
+}
+
+export async function countFoods() {
+  noStore();
+
+  try {
+    return await prisma.food.count();
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch foods.");
+  }
+}
+
+export async function countPoops() {
+  noStore();
+
+  try {
+    return await prisma.poop.count();
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch poops.");
+  }
 }

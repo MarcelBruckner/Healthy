@@ -13,7 +13,8 @@ for (let i = 0; i < 8; i++) {
     motivation: faker.lorem.words(),
     speisen: faker.lorem.words(),
     getraenke: faker.lorem.words(),
-    beschwerden: faker.lorem.words()
+    beschwerden: faker.lorem.words(),
+    anmerkungen: faker.lorem.words()
   });
 }
 
