@@ -21,13 +21,13 @@ export default function EditInvoiceForm({
   entry: Entry;
 }) {
   const initialState = { message: null, errors: {} };
-  const updateEntryWithId = updateEntry.bind(null, entry.id);
+  const updateEntryWithId = updateEntry.bind(null, entry.id!);
   const [state, dispatch] = useFormState(updateEntryWithId, initialState);
 
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <DatumUhrzeit state={state} datum={entry.datum} uhrzeit={entry.uhrzeit} />
+        <DatumUhrzeit state={state} datetime={entry.datetime} />
         <Ort state={state} ort={entry.ort} />
         <Motivation state={state} motivation={entry.motivation} />
         <Speisen state={state} speisen={entry.speisen} />

@@ -97,9 +97,8 @@ export type InvoiceForm = {
 };
 
 export type Entry = {
-  id: string;
-  datum: string;
-  uhrzeit: string;
+  id?: string;
+  datetime: Date;
   ort: string;
   motivation: string;
   speisen: string;

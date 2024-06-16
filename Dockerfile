@@ -7,6 +7,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
+COPY prisma ./prisma
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
@@ -15,14 +16,11 @@ RUN \
     else echo "Lockfile not found." && exit 1; \
     fi
 
-
-ENV DATA_PATH "/data"
-ENV NODE_ENV production
-
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/prisma ./prisma
 COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
@@ -37,17 +35,18 @@ RUN \
     else echo "Lockfile not found." && exit 1; \
     fi
 
+
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-ENV DATA_PATH "/data"
 ENV NODE_ENV production
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
@@ -57,9 +56,9 @@ RUN mkdir .next
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Set the correct permission for data path
-RUN mkdir /data
-RUN chmod -R 777 /data
+# CUSTOM STUFF
+ENV DATA_PATH "/data"
+RUN mkdir "/data"
 
 EXPOSE 3000
 
@@ -67,4 +66,6 @@ ENV PORT 3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+ENV HOSTNAME "0.0.0.0"
+CMD [ "npm", "run", "start:migrate:prod" ]
+

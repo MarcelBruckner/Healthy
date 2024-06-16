@@ -21,7 +21,7 @@ export default function CopyInvoiceForm({
   entry: Entry;
 }) {
   const initialState = { message: null, errors: {} };
-  const copyEntryWithId = copyEntry.bind(null, entry.id);
+  const copyEntryWithId = copyEntry.bind(null, entry.id!);
   const [state, dispatch] = useFormState(copyEntryWithId, initialState);
 
   return (

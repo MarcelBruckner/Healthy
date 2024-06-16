@@ -2,6 +2,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { lusitana } from "@/app/ui/fonts";
 import { fetchLatestEntries } from "@/app/lib/data";
+import { formatDatetime } from "@/app/lib/utils";
 
 export default async function LatestEntries() {
   const latestEntries = await fetchLatestEntries();
@@ -34,8 +35,7 @@ export default async function LatestEntries() {
                 <div className="flex items-center">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base flex flex-row">
-                      <Value value={entry.datum} />
-                      <Value value={entry.uhrzeit} />
+                      <Value value={formatDatetime(entry.datetime)} />
                       <Value value={entry.ort} />
                     </p>
                     <p className="hidden text-sm text-gray-500 sm:block flew flex-row">

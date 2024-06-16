@@ -10,8 +10,6 @@ import {
 import CardWrapper from "@/app/ui/dashboard/cards";
 
 export default async function Page() {
-  // console.log(process.env);
-
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>

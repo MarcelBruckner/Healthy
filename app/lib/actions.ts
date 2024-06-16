@@ -6,7 +6,13 @@ import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { fetchEntries, writeEntries } from "./data";
-import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
+import { PrismaClientValidationError } from "@prisma/client/runtime/library";
+import prisma from "./prisma";
+
+const DATETIME_ERROR = {
+  datum: ["Das Datum darf nicht in der Zukunft liegen."]
+};
 
 const FOOD_AND_DRINKS_ERROR = {
   ort: ["Bitte entweder einen Ort oder die Motivation der Mahlzeit angeben."],
@@ -58,7 +64,7 @@ const CreateInvoice = FormSchema.omit({ id: true });
 const UpdateInvoice = FormSchema.omit({ id: true });
 
 function validateFormData(formData: FormData, id?: string): State | Entry {
-  const validatedFields = CreateInvoice.safeParse({
+  let validatedFields = CreateInvoice.safeParse({
     datum: formData.get("datum"),
     uhrzeit: formData.get("uhrzeit"),
     ort: formData.get("ort"),
@@ -75,6 +81,18 @@ function validateFormData(formData: FormData, id?: string): State | Entry {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Beim Extrahieren der Daten ist ein Fehler aufgetreten!"
+    };
+  }
+
+  const datetime = moment(
+    validatedFields.data.datum + " " + validatedFields.data.uhrzeit,
+    "YYYY-MM-DD HH:mm"
+  );
+
+  if (datetime.isAfter(Date.now())) {
+    return {
+      errors: Object.assign({}, DATETIME_ERROR),
+      message: "Das Datum darf nicht in der Zukunft liegen!"
     };
   }
 
@@ -102,10 +120,19 @@ function validateFormData(formData: FormData, id?: string): State | Entry {
     };
   }
 
-  if (!id) {
-    id = uuidv4();
-  }
-  return { id: id, ...validatedFields.data };
+  let entry: Entry = {
+    datetime: datetime.toDate(),
+    ort: validatedFields.data.ort,
+    motivation: validatedFields.data.motivation,
+    speisen: validatedFields.data.speisen,
+    getraenke: validatedFields.data.getraenke,
+    beschwerden: validatedFields.data.beschwerden,
+    stuhltyp: validatedFields.data.stuhltyp,
+    stuhlverhalten: validatedFields.data.stuhlverhalten,
+    therapie: validatedFields.data.therapie,
+    anmerkungen: validatedFields.data.anmerkungen
+  };
+  return entry;
 }
 
 function isEntry(data: State | Entry): data is Entry {
@@ -119,12 +146,12 @@ export async function createEntry(prevState: State, formData: FormData) {
   }
 
   try {
-    let entries = await fetchEntries();
-    entries.push(validatedFields);
-    await writeEntries(entries);
+    await prisma?.entry.create({ data: validatedFields });
   } catch (error) {
     return {
-      message: "Database Error: Failed to Create Entry."
+      message:
+        "Database Error: Failed to Create Entry." +
+        (error as PrismaClientValidationError).message
     };
   }
   revalidatePath("/dashboard/entries");
@@ -142,10 +169,7 @@ export async function updateEntry(
   }
 
   try {
-    let entries = await fetchEntries();
-    entries = entries.filter(entry => entry.id !== id);
-    entries.push(validatedFields);
-    await writeEntries(entries);
+    await prisma?.entry.update({ where: { id: id }, data: validatedFields });
   } catch (error) {
     return {
       message: "Database Error: Failed to Update Entry."
@@ -167,9 +191,7 @@ export async function copyEntry(
   }
 
   try {
-    let entries = await fetchEntries();
-    entries.push(validatedFields);
-    await writeEntries(entries);
+    await prisma?.entry.create({ data: validatedFields });
   } catch (error) {
     return {
       message: "Database Error: Failed to Update Entry."
@@ -181,11 +203,8 @@ export async function copyEntry(
 }
 
 export async function deleteInvoice(id: string) {
-  let entries = await fetchEntries();
-  entries = entries.filter(entry => entry.id !== id);
-
   try {
-    writeEntries(entries);
+    await prisma?.entry.delete({ where: { id: id } });
     revalidatePath("/dashboard/entries");
     return { message: "Deleted Entry." };
   } catch (error) {

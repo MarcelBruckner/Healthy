@@ -1,7 +1,6 @@
 import moment from "moment";
-import { Entry, Revenue } from "./definitions";
+import { Entry } from "./definitions";
 import groupBy from "lodash/groupBy";
-import { Dictionary } from "lodash";
 
 export const formatCurrency = (amount: number | string) => {
   return (+amount / 100).toLocaleString("en-US", {
@@ -27,7 +26,7 @@ export const formatDateToLocal = (
 export function groupEntriesByMonth(entries: Entry[]) {
   const sortedGroups = Object.entries(
     groupBy(entries, (entry: Entry) => {
-      return moment(entry.datum, "YYYY-MM-DD").format("YYYY MM");
+      return moment(entry.datetime, "YYYY-MM-DD").format("YYYY MM");
     })
   ).sort((a, b) => (a[0] < b[0] ? 1 : -1));
 
@@ -93,3 +92,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages
   ];
 };
+
+export function formatDatetime(datetime: Date) {
+  return moment(datetime).format("YYYY-MM-DD HH:mm");
+}

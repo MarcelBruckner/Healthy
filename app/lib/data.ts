@@ -3,8 +3,9 @@ import { CustomersTableType, User, Customer, Entry } from "./definitions";
 import { formatCurrency } from "./utils";
 import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
+import moment from "moment";
+import prisma from "./prisma";
 const { stringify } = require("csv-stringify/sync");
-const { parse } = require("csv-parse");
 
 function getDataPath() {
   if (process.env.DATA_PATH) {
@@ -74,14 +75,14 @@ async function fetchFilteredEntriesUnpaginated(
         entry.anmerkungen.indexOf(query) >= 0 ||
         entry.motivation.indexOf(query) >= 0 ||
         entry.beschwerden.indexOf(query) >= 0 ||
-        entry.datum.indexOf(query) >= 0 ||
+        moment(entry.datetime).format("YYYY-MM-DD").indexOf(query) >= 0 ||
         entry.getraenke.indexOf(query) >= 0 ||
         entry.ort.indexOf(query) >= 0 ||
         entry.speisen.indexOf(query) >= 0 ||
         entry.stuhltyp.toString() === query ||
         entry.stuhlverhalten.indexOf(query) >= 0 ||
         entry.therapie.indexOf(query) >= 0 ||
-        entry.uhrzeit.indexOf(query) >= 0
+        moment(entry.datetime).format("HH:mm").indexOf(query) >= 0
       );
     });
     return filteredEntries;
@@ -119,12 +120,14 @@ export async function fetchEntriesPages(query: string) {
 
 export async function fetchEntryById(id: string) {
   noStore();
+
   try {
-    const entries = (await fetchEntries()).filter(entry => entry.id === id);
-    if (entries.length === 0) {
-      return null;
-    }
-    return entries[0];
+    const entry = await prisma?.entry.findUnique({
+      where: {
+        id: id
+      }
+    });
+    return entry;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch entry.");
@@ -211,38 +214,26 @@ export async function fetchLatestEntries(): Promise<Entry[]> {
   return allEntries.slice(0, 5);
 }
 
-export async function fetchEntries(): Promise<Entry[]> {
-  let content = "";
-  try {
-    content = await fs.readFile(ENTRIES_CSV, "utf-8");
-  } catch (err) {
-    return [];
+function sortByDate(a: Entry, b: Entry) {
+  if (a.datetime > b.datetime) {
+    return -1;
+  } else if (a.datetime < b.datetime) {
+    return 1;
   }
+  return a.datetime > b.datetime ? -1 : 1;
+}
+
+export async function fetchEntries(): Promise<Entry[]> {
+  noStore();
 
   try {
-    return new Promise((resolve, reject) => {
-      parse(
-        content,
-        { columns: true, trim: true },
-        (err: Error, rows: Entry[]) => {
-          if (err) {
-            reject(err);
-          }
-          const entries = rows.sort((a, b) => {
-            if (a.datum > b.datum) {
-              return -1;
-            } else if (a.datum < b.datum) {
-              return 1;
-            } else {
-              return a.uhrzeit > b.uhrzeit ? -1 : 1;
-            }
-          });
-          resolve(entries);
-        }
-      );
-    });
+    const entries = await prisma?.entry.findMany();
+    if (!entries) {
+      return [];
+    }
+    return entries.sort(sortByDate);
   } catch (error) {
-    console.error("Failed to fetch entries:", error);
+    console.error("Failed to fetch entries:");
     throw new Error("Failed to fetch entries.");
   }
 }

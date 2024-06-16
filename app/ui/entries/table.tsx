@@ -3,6 +3,8 @@ import { fetchFilteredEntries } from "@/app/lib/data";
 import { Entry } from "@/app/lib/definitions";
 import { ReactComponentElement } from "react";
 import { HomeIcon, CakeIcon, UserGroupIcon, BeakerIcon, ExclamationTriangleIcon, ChartBarIcon, EyeDropperIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
+import moment from "moment";
+import { formatDatetime } from "@/app/lib/utils";
 
 export default async function EntriesTable({
   query,
@@ -68,7 +70,7 @@ export default async function EntriesTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <p className="text-sm text-gray-500">
-                      {entry.datum} {entry.uhrzeit}
+                      {formatDatetime(entry.datetime)}
                     </p>
                   </div>
                 </div>
@@ -88,8 +90,8 @@ export default async function EntriesTable({
                     <SmallEntry type={Type.ANMERKUNGEN} value={entry.anmerkungen} />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateEntry id={entry.id} />
-                    <DeleteEntry id={entry.id} />
+                    <UpdateEntry id={entry.id!} />
+                    <DeleteEntry id={entry.id!} />
                   </div>
                 </div>
               </div>
@@ -137,7 +139,7 @@ export default async function EntriesTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap px-3 py-3">
-                    {entry.datum} {entry.uhrzeit}
+                    {formatDatetime(entry.datetime)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">{entry.ort}</td>
                   <td className="whitespace-nowrap px-3 py-3">
@@ -165,9 +167,9 @@ export default async function EntriesTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateEntry id={entry.id} />
-                      <CopyEntry id={entry.id} />
-                      <DeleteEntry id={entry.id} />
+                      <UpdateEntry id={entry.id!} />
+                      <CopyEntry id={entry.id!} />
+                      <DeleteEntry id={entry.id!} />
                     </div>
                   </td>
                 </tr>
