@@ -22,40 +22,38 @@ function deleteAllPoops() {
 
 function createPoop() {
   cy.contains("Stuhlgang anlegen").click();
-  cy.get("input[name=ort]").type("München");
-  cy.get("input[name=motivation]").type("Essen mit Freunden");
-  cy.get("input[name=speisen]").type("Spaghetti Bolognese");
-  cy.get("input[name=getraenke]").type("1 Flasche Rotwein");
-  cy.get("input[name=beschwerden]").type("Suff");
+  cy.get("select[name=stuhltyp]").select("3");
+  cy.get("input[name=stuhlverhalten]").type("Super");
+  cy.get("input[name=therapie]").type("Keine");
   cy.get("button").contains("Eintrag anlegen").click();
   cy.url().should("include", "/poop");
 
-  cy.contains("Stuhlgang anlegen");
-  cy.contains("München");
-  cy.contains("Essen mit Freunden");
-  cy.contains("Spaghetti Bolognese");
-  cy.contains("1 Flasche Rotwein");
-  cy.contains("Suff");
+  cy.contains("Typ 3");
 }
 
 function editPoop() {
   cy.get(".edit-poop-button").click({ multiple: true, force: true });
 
-  cy.get("input[name=ort]").clear();
-  cy.get("input[name=ort]").type("Kempten");
+  cy.get("select[name=stuhltyp]").select("4");
+  cy.get("input[name=stuhlverhalten]").clear();
+  cy.get("input[name=stuhlverhalten]").type("Geht so");
+
   cy.get("button").contains("Eintrag bearbeiten").click();
 
-  cy.contains("Kempten");
+  cy.contains("Geht so");
 }
 
 function copyPoop() {
   cy.get(".copy-poop-button").click({ multiple: true, force: true });
-  cy.get("input[name=ort]").clear();
-  cy.get("input[name=ort]").type("München");
+
+  cy.get("select[name=stuhltyp]").select("3");
+
+  cy.get("input[name=stuhlverhalten]").clear();
+  cy.get("input[name=stuhlverhalten]").type("Super");
   cy.get("button").contains("Eintrag kopieren").click();
 
-  cy.contains("Kempten");
-  cy.contains("München");
+  cy.contains("Super");
+  cy.contains("Geht so");
 }
 
 describe("Food", () => {
@@ -75,11 +73,11 @@ describe("Food", () => {
 
     createPoop();
 
-    cy.get("#poop-search").type("München");
-    cy.get("#poop-table").contains("München");
+    cy.get("#search").type("Super");
+    cy.get("#poop-table").contains("Super");
 
-    cy.get("#poop-search").clear();
-    cy.get("#poop-search").type("Kempten");
-    cy.get("#poop-table").contains("München").should("not.exist");
+    cy.get("#search").clear();
+    cy.get("#search").type("Nicht gut");
+    cy.get("#poop-table").contains("Super").should("not.exist");
   });
 });

@@ -93,6 +93,8 @@ async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
   noStore();
 
   try {
+    const possibleQueryNumber = !query || isNaN(+query) ? -1 : +query;
+
     return await prisma?.poop.findMany({
       orderBy: { datetime: "desc" },
       where: {
@@ -104,7 +106,7 @@ async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
           },
           {
             stuhltyp: {
-              equals: +query
+              equals: possibleQueryNumber
             }
           },
           {

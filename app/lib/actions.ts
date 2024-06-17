@@ -281,28 +281,6 @@ export async function deletePoop(id: string) {
   }
 }
 
-function hasPoop(
-  validatedFields: z.SafeParseSuccess<{
-    datum: string;
-    uhrzeit: string;
-    ort: string;
-    motivation: string;
-    speisen: string;
-    getraenke: string;
-    beschwerden: string;
-    stuhltyp: number;
-    stuhlverhalten: string;
-    therapie: string;
-    anmerkungen: string;
-  }>
-) {
-  return (
-    validatedFields.data?.stuhltyp !== 0 ||
-    validatedFields.data?.stuhlverhalten !== "" ||
-    validatedFields.data?.therapie !== ""
-  );
-}
-
 function getPoopError(
   validatedFields: z.SafeParseSuccess<{
     datum: string;
@@ -322,27 +300,6 @@ function getPoopError(
   }
 
   return result;
-}
-
-function hasValidPoop(
-  validatedFields: z.SafeParseSuccess<{
-    datum: string;
-    uhrzeit: string;
-    ort: string;
-    motivation: string;
-    speisen: string;
-    getraenke: string;
-    beschwerden: string;
-    stuhltyp: number;
-    stuhlverhalten: string;
-    therapie: string;
-    anmerkungen: string;
-  }>
-) {
-  return (
-    validatedFields.data?.stuhltyp !== 0 &&
-    validatedFields.data?.stuhlverhalten !== ""
-  );
 }
 
 function getFoodAndDrinksError(
