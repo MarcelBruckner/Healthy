@@ -41,8 +41,8 @@ export default async function FoodsTable({
   return (
     <div id="poop-table" className="file:mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          <div className="md:hidden">
+        <div className="rounded-lg bg-gray-50 p-2 xl:pt-0">
+          <div className="xl:hidden">
             {entries?.map(entry => (
               <div
                 key={entry.id}
@@ -50,9 +50,14 @@ export default async function FoodsTable({
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className=" text-gray-500">
                       {formatDatetime(entry.datetime)}
                     </p>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <EditButton type="poop" id={entry.id!} />
+                    <CopyButton type="poop" id={entry.id} />
+                    <DeleteButton type="poop" id={entry.id!} deleteFunc={deletePoop} />
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
@@ -64,16 +69,11 @@ export default async function FoodsTable({
                     />
                     <SmallEntry type="therapie" value={entry.therapie} />
                   </div>
-                  <div className="flex justify-end gap-2">
-                    <EditButton type="poop" id={entry.id!} />
-                    <CopyButton type="poop" id={entry.id} />
-                    <DeleteButton type="poop" id={entry.id!} deleteFunc={deletePoop} />
-                  </div>
                 </div>
               </div>
             ))}
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
+          <table className="hidden min-w-full text-gray-900 xl:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
