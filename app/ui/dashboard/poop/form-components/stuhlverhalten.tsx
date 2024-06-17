@@ -7,10 +7,10 @@ import {
 export default async function Stuhlverhalten({ state, stuhltyp, stuhlverhalten }: { state: StatePoop, stuhltyp?: number, stuhlverhalten?: string }) {
     function StuhltypForm() {
         return (
-            <div>
+            <div className="lg:w-44">
                 <label
                     htmlFor="stuhltyp"
-                    className="mb-2 block text-sm font-medium"
+                    className="mb-2 w-full block text-sm font-medium"
                 >
                     Stuhltyp
                 </label>
@@ -20,7 +20,7 @@ export default async function Stuhlverhalten({ state, stuhltyp, stuhlverhalten }
                             id="stuhltyp"
                             name="stuhltyp"
                             placeholder="Stuhltyp"
-                            className="peer block  rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                            className="peer w-full lg:block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                             aria-describedby="stuhltyp-error"
                             defaultValue={stuhltyp}
                         >
@@ -92,25 +92,12 @@ export default async function Stuhlverhalten({ state, stuhltyp, stuhlverhalten }
 
     return (
         <div>
-            <div className="hidden sm:block">
-                <div className="mb-4 flex flex-row">
-                    <div className="mr-4">
-                        <StuhltypForm />
-                    </div>
-
-                    <StuhlverhaltenForm />
-                </div >
-            </div>
-
-            <div className="sm:hidden">
-                <div className="mb-4">
+            <div className="mb-4 lg:flex lg:flex-row">
+                <div className="lg:mr-4 mb-4 lg:mb-0">
                     <StuhltypForm />
-                </div >
-
-                <div className="mb-4">
-                    <StuhlverhaltenForm />
-                </div >
-            </div>
+                </div>
+                <StuhlverhaltenForm />
+            </div >
         </div >
     );
 }
