@@ -2,6 +2,16 @@ import moment from "moment";
 import groupBy from "lodash/groupBy";
 import { Food, FoodDB } from "./definitions";
 
+export const BRISTOl_STOOL_SCALA = [
+  "Einzelne, feste Kügelchen, schwer auszuscheiden",
+  "Wurstartig, klumpig",
+  "Wurstartig mit rissiger Oberfläche",
+  "Wurstartig mit glatter Oberfläche",
+  "Einzelne weiche, glattrandige Klümpchen, leicht auszuscheiden",
+  "Einzelne weiche Klümpchen mit unregelmäßigem Rand",
+  "Flüssig, ohne feste Bestandteile"
+];
+
 export const formatCurrency = (amount: number | string) => {
   return (+amount / 100).toLocaleString("en-US", {
     style: "currency",

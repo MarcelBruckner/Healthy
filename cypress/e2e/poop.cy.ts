@@ -7,7 +7,7 @@ function openPoop() {
   login();
 
   // Find a link with an href attribute containing "about" and click it
-  cy.get('a[href*="poop"]').click();
+  cy.get('a[href*="poop"]').click({ multiple: true, force: true });
 
   // The new url should include "/about"
   cy.url().should("include", "/poop");
@@ -17,13 +17,14 @@ function openPoop() {
 }
 
 function deleteAllPoops() {
+  createPoop();
   cy.get(".delete-poop-button").click({ multiple: true, force: true });
 }
 
 function createPoop() {
   cy.contains("Stuhlgang anlegen").click();
   cy.get("select[name=stuhltyp]").select("3");
-  cy.get("input[name=stuhlverhalten]").type("Super");
+  cy.get("textarea[name=stuhlverhalten]").type("Super");
   cy.get("input[name=therapie]").type("Keine");
   cy.get("button").contains("Eintrag anlegen").click();
   cy.url().should("include", "/poop");
@@ -35,8 +36,8 @@ function editPoop() {
   cy.get(".edit-poop-button").click({ multiple: true, force: true });
 
   cy.get("select[name=stuhltyp]").select("4");
-  cy.get("input[name=stuhlverhalten]").clear();
-  cy.get("input[name=stuhlverhalten]").type("Geht so");
+  cy.get("textarea[name=stuhlverhalten]").clear();
+  cy.get("textarea[name=stuhlverhalten]").type("Geht so");
 
   cy.get("button").contains("Eintrag bearbeiten").click();
 
@@ -48,8 +49,8 @@ function copyPoop() {
 
   cy.get("select[name=stuhltyp]").select("3");
 
-  cy.get("input[name=stuhlverhalten]").clear();
-  cy.get("input[name=stuhlverhalten]").type("Super");
+  cy.get("textarea[name=stuhlverhalten]").clear();
+  cy.get("textarea[name=stuhlverhalten]").type("Super");
   cy.get("button").contains("Eintrag kopieren").click();
 
   cy.contains("Super");
@@ -79,5 +80,7 @@ describe("Food", () => {
     cy.get("#search").clear();
     cy.get("#search").type("Nicht gut");
     cy.get("#poop-table").contains("Super").should("not.exist");
+
+    deleteAllPoops();
   });
 });

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { lusitana } from "@/app/ui/fonts";
 import Image from "next/image";
+import { BRISTOl_STOOL_SCALA } from "@/app/lib/utils";
 
 export const metadata: Metadata = {
   title: "Infos"
@@ -9,24 +10,15 @@ export const metadata: Metadata = {
 
 export default function Page() {
 
-  const scala = [
-    "Einzelne, feste Kügelchen, schwer auszuscheiden",
-    "Wurstartig, klumpig",
-    "Wurstartig mit rissiger Oberfläche",
-    "Wurstartig mit glatter Oberfläche",
-    "Einzelne weiche, glattrandige Klümpchen, leicht auszuscheiden",
-    "Einzelne weiche Klümpchen mit unregelmäßigem Rand",
-    "Flüssig, ohne feste Bestandteile"
-  ]
 
   function ScalaEntry({ index }: { index: number }) {
     const src = `/poop-scala/typ${index + 1}.png`
-    const alt = `Typ ${index}: ${scala[index]}`
+    const alt = `Typ ${index}: ${BRISTOl_STOOL_SCALA[index]}`
 
     return < div key={alt} className="mb-4 flex flex-row" >
       <Image className="left-3 mr-3" src={src} alt={alt} width="100" height="100" />
       <div className="flex flex-row h-auto ">
-        <p className="font-bold mr-4 h-full content-center">Typ {index + 1}:</p> <p className="h-full content-center">{scala[index]}</p>
+        <p className="font-bold mr-4 h-full content-center">Typ {index + 1}:</p> <p className="h-full content-center">{BRISTOl_STOOL_SCALA[index]}</p>
       </div>
     </div>
   }
@@ -40,7 +32,7 @@ export default function Page() {
         Ein Ernährungstagebuch kann Sie unterstützen, Ihren täglichen Tagesablauf und Ihre Gewohnheiten hinsichtlich der Nahrungsaufnahme zu reflektieren. Weiters kann es Ihnen helfen herauszufinden, welche Nahrungsmittel Sie besser oder weniger gut vertragen. Wenn Sie Ihr Stuhlverhalten mitdokumentieren, können Sie gegebenfalls auch einen Zusammenhang zwischen bestimmten Lebensmitteln und deren Auswirkung auf Ihren Verdauungstrakt erkennen.
       </div>
 
-      <p className="mb-4 max-w-4xl rounded-xl bg-gray-50 shadow-sm p-4">
+      <div className="mb-4 max-w-4xl rounded-xl bg-gray-50 shadow-sm p-4">
         <h2 className={`${lusitana.className} mb-4 text-xl md:text-xl`}>
           Was ist wichtig bei der Führung eines Ernährungstagebuchs?</h2>
         <ul className="space-y-1  list-disc list-inside ">
@@ -53,16 +45,16 @@ export default function Page() {
           <li>Notieren Sie, wenn es sonstige Besonderheiten gab. (z. B. Zeitdruck beim Essen, das Naschen beim Fernsehen,…)</li>
           <li>Notieren Sie Ihr Stuhlverhalten. Tragen Sie die Uhrzeit, die Konsistenz, die Farbe, die Menge und sonstige Auffälligkeiten Ihres Stuhles ein.</li>
         </ul>
-      </p>
+      </div>
 
 
 
-      <p className="mb-4 max-w-4xl rounded-xl bg-gray-50 shadow-sm p-4">
+      <div className="mb-4 max-w-4xl rounded-xl bg-gray-50 shadow-sm p-4">
         <h2 className={`${lusitana.className} mb-4 text-xl md:text-xl`}>
           Bristol-Stuhlformen-Skala
         </h2>
-        {scala.map((entry, index) => <ScalaEntry key={index} index={index} />)}
-      </p>
+        {BRISTOl_STOOL_SCALA.map((entry, index) => <ScalaEntry key={index} index={index} />)}
+      </div>
 
       <div>
         <Link target="_blank" className="text-white bg-brand-700 hover:bg-brand-800 focus:ring-4 focus:ring-brand-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-brand-600 dark:hover:bg-brand-700 focus:outline-none dark:focus:ring-brand-800" href="https://selpers.com/wp-content/uploads/2019/06/Ern%C3%A4hrungs-Symptom-Tagebuch-bei-Durchfall.pdf">Source: selpers.com</Link>

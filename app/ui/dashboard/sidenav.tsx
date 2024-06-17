@@ -1,35 +1,123 @@
-import Link from "next/link";
-import NavLinks from "@/app/ui/dashboard/nav-links";
-import HealthyLogo from "@/app/ui/healthy-logo";
-import { PowerIcon } from "@heroicons/react/24/outline";
-import { signOut } from "@/auth";
+'use client'
 
-export default function SideNav() {
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import NavLinks from './nav-links';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import HomeIcon from '@mui/icons-material/HomeOutlined';
+import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlined';
+import WcOutlinedIcon from '@mui/icons-material/WcOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import Link from "next/link";
+import HealthyLogo from '../healthy-logo';
+import { lusitana } from '../fonts';
+
+const drawerWidth = 260;
+
+export default function ResponsiveDrawer({ children }: { children: React.ReactNode }) {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isClosing, setIsClosing] = React.useState(false);
+
+  const handleDrawerClose = () => {
+    setIsClosing(true);
+    setMobileOpen(false);
+  };
+
+  const handleDrawerTransitionEnd = () => {
+    setIsClosing(false);
+  };
+
+  const handleDrawerToggle = () => {
+    if (!isClosing) {
+      setMobileOpen(!mobileOpen);
+    }
+  };
+
+  const drawer = (
+    <div>
+      <Toolbar />
+      <Divider />
+      <NavLinks />
+    </div>
+  );
+
   return (
-    <div className="flex h-full flex-col px-3 py-4 md:px-1">
-      <Link
-        className="mb-2 flex h-20 items-end justify-start rounded-md bg-brand-800 p-4 md:h-40"
-        href="/"
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
+        }}
       >
-        <div className="w-36 text-white md:w-40">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { md: 'none' } }}
+            className='mr-4'
+          >
+            <MenuIcon />
+          </IconButton>
           <HealthyLogo />
-        </div>
-      </Link>
-      <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        <NavLinks />
-        <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
-        <form
-          action={async () => {
-            "use server";
-            await signOut();
+
+        </Toolbar>
+      </AppBar>
+      <Box
+        component="nav"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+        aria-label="mailbox folders"
+      >
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onTransitionEnd={handleDrawerTransitionEnd}
+          onClose={handleDrawerClose}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-brand-100 hover:text-brand-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <PowerIcon className="w-6" />
-            <div className="hidden md:block">Sign Out</div>
-          </button>
-        </form>
-      </div>
-    </div>
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'none', md: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+      >
+        <Toolbar />
+        {children}
+      </Box>
+    </Box>
   );
 }

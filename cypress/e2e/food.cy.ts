@@ -7,7 +7,7 @@ function openFood() {
   login();
 
   // Find a link with an href attribute containing "about" and click it
-  cy.get('a[href*="food"]').click();
+  cy.get('a[href*="food"]').click({ multiple: true, force: true });
 
   // The new url should include "/about"
   cy.url().should("include", "/food");
@@ -17,6 +17,7 @@ function openFood() {
 }
 
 function deleteAllFoods() {
+  createFood();
   cy.get(".delete-food-button").click({ multiple: true, force: true });
 }
 
@@ -24,8 +25,8 @@ function createFood() {
   cy.contains("Essen und Trinken anlegen").click();
   cy.get("input[name=ort]").type("München");
   cy.get("input[name=motivation]").type("Essen mit Freunden");
-  cy.get("input[name=speisen]").type("Spaghetti Bolognese");
-  cy.get("input[name=getraenke]").type("1 Flasche Rotwein");
+  cy.get("textarea[name=speisen]").type("Spaghetti Bolognese");
+  cy.get("textarea[name=getraenke]").type("1 Flasche Rotwein");
   cy.get("input[name=beschwerden]").type("Suff");
   cy.get("button").contains("Eintrag anlegen").click();
   cy.url().should("include", "/food");
@@ -81,5 +82,7 @@ describe("Food", () => {
     cy.get("#search").clear();
     cy.get("#search").type("Kempten");
     cy.get("#food-table").contains("München").should("not.exist");
+
+    deleteAllFoods();
   });
 });

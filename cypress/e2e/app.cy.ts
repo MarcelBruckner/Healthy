@@ -8,7 +8,7 @@ describe("Navigation", () => {
     login();
 
     // Find a link with an href attribute containing "about" and click it
-    cy.get('a[href*="infos"]').click();
+    cy.get('a[href*="infos"]').click({ multiple: true, force: true });
 
     // The new url should include "/about"
     cy.url().should("include", "/infos");

@@ -1,55 +1,52 @@
 "use client";
 
-import {
-  InformationCircleIcon,
-  HomeIcon,
-  DocumentDuplicateIcon,
-  CakeIcon,
-  ChevronDoubleDownIcon
-} from "@heroicons/react/24/outline";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/HomeOutlined';
+import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlined';
+import WcOutlinedIcon from '@mui/icons-material/WcOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: "Home", href: "/dashboard", icon: HomeIcon },
+  { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
   {
     name: "Essen und Trinken",
     href: "/dashboard/food",
-    icon: CakeIcon
+    icon: RestaurantMenuOutlinedIcon
   }, {
     name: "Stuhlgang",
     href: "/dashboard/poop",
-    icon: ChevronDoubleDownIcon
+    icon: WcOutlinedIcon
   },
-  { name: "Infos", href: "/dashboard/infos", icon: InformationCircleIcon }
+  { name: "Infos", href: "/dashboard/infos", icon: InfoOutlinedIcon }
 ];
 
 export default function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <>
-      {links.map(link => {
+    <List>
+      {links.map((link) => {
         const LinkIcon = link.icon;
-        return (
-          <Link
-            key={link.name}
-            href={link.href}
-            className={clsx(
-              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-brand-100 hover:text-brand-600 md:flex-none md:justify-start md:p-2 md:px-3",
-              {
-                "bg-brand-100 text-brand": pathname === link.href
-              }
-            )}
-          >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
-          </Link>
-        );
+        return <ListItem component="a" key={link.name} href={link.href} disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <LinkIcon />
+            </ListItemIcon>
+            <ListItemText >
+              {link.name}
+            </ListItemText>
+          </ListItemButton>
+        </ListItem>
       })}
-    </>
+    </List>
+
   );
 }

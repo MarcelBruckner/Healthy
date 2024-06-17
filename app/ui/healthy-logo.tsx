@@ -13,9 +13,9 @@ export default function HealthyLogo() {
         width={900}
         height={900}
         style={{ width: 'auto', height: '3rem', borderRadius: "1rem" }} // optional
-        className="md:block hidden mr-4"
+        className="block mr-4"
       />
-      <p className="text-[44px]">Healthy</p>
+      <p className="text-[40px]">Healthy</p>
     </div>
   );
 }
