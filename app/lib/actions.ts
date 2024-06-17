@@ -3,13 +3,15 @@ import { z } from "zod";
 import { Food, Poop } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import moment from "moment";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import prisma from "./prisma";
-import Stuhlverhalten from "../ui/dashboard/poop/form-components/stuhlverhalten";
-import Anmerkungen from "../ui/dashboard/food/form-components/anmerkungen";
+
+export async function serverSignOut() {
+  await signOut();
+}
 
 const DATETIME_ERROR = {
   datum: ["Das Datum darf nicht in der Zukunft liegen."]

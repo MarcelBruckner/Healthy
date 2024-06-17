@@ -9,21 +9,14 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import NavLinks from './nav-links';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import HomeIcon from '@mui/icons-material/HomeOutlined';
-import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlined';
-import WcOutlinedIcon from '@mui/icons-material/WcOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import Link from "next/link";
 import HealthyLogo from '../healthy-logo';
-import { lusitana } from '../fonts';
+import { serverSignOut } from '@/app/lib/actions';
+import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined';
 
 const drawerWidth = 260;
 
@@ -51,6 +44,18 @@ export default function ResponsiveDrawer({ children }: { children: React.ReactNo
       <Toolbar />
       <Divider />
       <NavLinks />
+
+      <List style={{ position: "absolute", width: "100%", bottom: "0" }}>
+        <ListItemButton onClick={async () => await serverSignOut()}>
+          <ListItemIcon>
+            <PowerSettingsNewOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText >
+            Sign out
+          </ListItemText>
+        </ListItemButton>
+      </List>
+
     </div>
   );
 
