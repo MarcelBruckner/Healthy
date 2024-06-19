@@ -10,24 +10,24 @@ import Stuhlverhalten from "./form-components/stuhlverhalten";
 import Therapie from "./form-components/therapie";
 
 export default function EditPoopForm({
-  poop: poop,
+  toilet: toilet,
 }: {
-  poop: PoopDB;
+  toilet: PoopDB;
 }) {
   const initialState = { message: null, errors: {} };
-  const updateEntryWithId = updatePoop.bind(null, poop.id);
+  const updateEntryWithId = updatePoop.bind(null, toilet.id);
   const [state, dispatch] = useFormState(updateEntryWithId, initialState);
 
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <DatumUhrzeit state={state} datetime={poop.datetime} />
-        <Stuhlverhalten state={state} stuhltyp={poop.stuhltyp} stuhlverhalten={poop.stuhlverhalten} />
-        <Therapie state={state} therapie={poop.therapie} />
+        <DatumUhrzeit state={state} datetime={toilet.datetime} />
+        <Stuhlverhalten state={state} stuhltyp={toilet.stuhltyp} stuhlverhalten={toilet.stuhlverhalten} />
+        <Therapie state={state} therapie={toilet.therapie} />
 
         <Errors state={state} />
       </div>
-      <Buttons type="poop" submit="Eintrag bearbeiten" />
+      <Buttons type="toilet" submit="Eintrag bearbeiten" />
     </form>
   );
 }

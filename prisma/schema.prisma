@@ -22,10 +22,15 @@ model Food {
   anmerkungen String
 }
 
-model Poop {
-  id             String   @id @default(cuid())
-  datetime       DateTime
-  stuhltyp       Int
-  stuhlverhalten String
-  therapie       String
+model Toilet {
+  id          String   @id @default(cuid())
+  datetime    DateTime
+  urinmenge   Int
+  urindruck   Int
+  stuhltyp    Int
+  stuhlfarbe  Int
+  stuhlmenge  Int
+  stuhldruck  Int
+  therapie    String
+  anmerkungen String
 }

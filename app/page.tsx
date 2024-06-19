@@ -15,7 +15,7 @@ export default function Page() {
           <p
             className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
           >
-            <strong>Welcome to Healthy.</strong> A self-hosted tracker for your health, eating habits and poop behavior.
+            <strong>Welcome to Healthy.</strong> A self-hosted tracker for your health, eating habits and toilet behavior.
           </p>
           <Link
             href="/login"
@@ -27,7 +27,7 @@ export default function Page() {
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
           <Image
             src="/healthy.jpg"
-            alt="Healthy - A self-hosted tracker for your health, eating habits and poop behavior."
+            alt="Healthy - A self-hosted tracker for your health, eating habits and toilet behavior."
             width={900}
             height={900}
             style={{ borderRadius: "5rem" }} // optional

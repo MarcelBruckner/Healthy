@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
-import CreatePoopForm from "@/app/ui/dashboard/poop/create-form";
+import CreatePoopForm from "@/app/ui/dashboard/toilet/create-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,10 +11,10 @@ export default async function Page() {
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: "Stuhlgang", href: "/dashboard/food" },
+                    { label: "Toilette", href: "/dashboard/food" },
                     {
                         label: "Eintrag anlegen",
-                        href: "/dashboard/poop/create",
+                        href: "/dashboard/toilet/create",
                         active: true
                     }
                 ]}

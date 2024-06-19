@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | Healthy",
     default: "Healthy"
   },
-  description: "Healthy - A self-hosted tracker for your health, eating habits and poop behavior.",
+  description: "Healthy - A self-hosted tracker for your health, eating habits and toilet behavior.",
   metadataBase: new URL("https://github.com/MarcelBruckner/Healthy")
 };
 

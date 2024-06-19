@@ -95,25 +95,16 @@ async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
   try {
     const possibleQueryNumber = !query || isNaN(+query) ? -1 : +query;
 
-    return await prisma?.poop.findMany({
+    return await prisma?.toilet.findMany({
       orderBy: { datetime: "desc" },
       where: {
         OR: [
-          {
-            stuhlverhalten: {
-              contains: query
-            }
-          },
           {
             stuhltyp: {
               equals: possibleQueryNumber
             }
           },
-          {
-            stuhlverhalten: {
-              contains: query
-            }
-          },
+
           {
             therapie: {
               contains: query
@@ -124,7 +115,7 @@ async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
     });
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch poops.");
+    throw new Error("Failed to fetch toilets.");
   }
 }
 
@@ -195,7 +186,7 @@ export async function fetchFoodById(id: string) {
 }
 
 export async function fetchPoopById(id: string) {
-  return await fetchById(prisma.poop, id);
+  return await fetchById(prisma.toilet, id);
 }
 
 export async function fetchLatestFoods(): Promise<FoodDB[]> {
@@ -234,7 +225,7 @@ export async function fetchPoops(): Promise<PoopDB[]> {
 
   try {
     return (
-      (await prisma?.poop.findMany({
+      (await prisma?.toilet.findMany({
         orderBy: { datetime: "desc" }
       })) ?? []
     );
@@ -259,9 +250,9 @@ export async function countPoops() {
   noStore();
 
   try {
-    return await prisma.poop.count();
+    return await prisma.toilet.count();
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch poops.");
+    throw new Error("Failed to fetch toilets.");
   }
 }

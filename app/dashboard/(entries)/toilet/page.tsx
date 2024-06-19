@@ -1,6 +1,6 @@
 import Pagination from "@/app/ui/dashboard/common/pagination";
 import Search from "@/app/ui/search";
-import Table from "@/app/ui/dashboard/poop/table";
+import Table from "@/app/ui/dashboard/toilet/table";
 import { lusitana } from "@/app/ui/fonts";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import { CreateButton } from "@/app/ui/dashboard/common/buttons";
 
 export const metadata: Metadata = {
-  title: "Stuhlgang"
+  title: "Toilette"
 };
 
 export default async function Page({
@@ -28,11 +28,11 @@ export default async function Page({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Stuhlgang</h1>
+        <h1 className={`${lusitana.className} text-2xl`}>Toilette</h1>
       </div>
       <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Durchsuche Stuhlgänge..." />
-        <CreateButton type="poop" />
+        <CreateButton type="toilet" />
       </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

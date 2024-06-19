@@ -1,17 +1,17 @@
-import Form from "@/app/ui/dashboard/poop/create-form";
+import Form from "@/app/ui/dashboard/toilet/create-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
 import { fetchFoodById, fetchPoopById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Stuhlgang kopieren"
+  title: "Toilette kopieren"
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const poop = await fetchPoopById(id);
-  if (!poop) {
+  const toilet = await fetchPoopById(id);
+  if (!toilet) {
     notFound();
   }
 
@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           }
         ]}
       />
-      <Form poop={poop} />
+      <Form toilet={toilet} />
     </main>
   );
 }

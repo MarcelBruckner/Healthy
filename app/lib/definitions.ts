@@ -12,9 +12,14 @@ export type FoodDB = Food & { id: string };
 
 export type Poop = {
   datetime: Date;
+  urinmenge: number;
+  urindruck: number;
   stuhltyp: number;
-  stuhlverhalten: string;
+  stuhlfarbe: number;
+  stuhlmenge: number;
+  stuhldruck: number;
   therapie: string;
+  anmerkungen: string;
 };
 
 export type PoopDB = Poop & { id: string };

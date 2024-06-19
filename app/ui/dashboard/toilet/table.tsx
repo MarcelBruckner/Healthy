@@ -39,7 +39,7 @@ export default async function FoodsTable({
   }
 
   return (
-    <div id="poop-table" className="file:mt-6 flow-root">
+    <div id="toilet-table" className="file:mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 xl:pt-0">
           <div className="xl:hidden">
@@ -55,9 +55,9 @@ export default async function FoodsTable({
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <EditButton type="poop" id={entry.id!} />
-                    <CopyButton type="poop" id={entry.id} />
-                    <DeleteButton type="poop" id={entry.id!} deleteFunc={deletePoop} />
+                    <EditButton type="toilet" id={entry.id!} />
+                    <CopyButton type="toilet" id={entry.id} />
+                    <DeleteButton type="toilet" id={entry.id!} deleteFunc={deletePoop} />
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
@@ -109,9 +109,9 @@ export default async function FoodsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <EditButton type="poop" id={entry.id!} />
-                      <CopyButton type="poop" id={entry.id} />
-                      <DeleteButton type="poop" id={entry.id!} deleteFunc={deletePoop} />
+                      <EditButton type="toilet" id={entry.id!} />
+                      <CopyButton type="toilet" id={entry.id} />
+                      <DeleteButton type="toilet" id={entry.id!} deleteFunc={deletePoop} />
                     </div>
                   </td>
                 </tr>

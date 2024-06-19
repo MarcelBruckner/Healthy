@@ -12,7 +12,7 @@ export default function Page() {
 
 
   function ScalaEntry({ index }: { index: number }) {
-    const src = `/poop-scala/typ${index + 1}.png`
+    const src = `/toilet-scala/typ${index + 1}.png`
     const alt = `Typ ${index}: ${BRISTOl_STOOL_SCALA[index]}`
 
     return < div key={alt} className="mb-4 flex flex-row" >

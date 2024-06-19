@@ -12,6 +12,10 @@ export const BRISTOl_STOOL_SCALA = [
   "Flüssig, ohne feste Bestandteile"
 ];
 
+export function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export const formatCurrency = (amount: number | string) => {
   return (+amount / 100).toLocaleString("en-US", {
     style: "currency",

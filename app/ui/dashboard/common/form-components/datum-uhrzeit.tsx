@@ -1,11 +1,11 @@
-import { StateFood } from "@/app/lib/actions";
+import { StateFood, StatePoop } from "@/app/lib/actions";
 import {
     CalendarIcon,
     ClockIcon
 } from "@heroicons/react/24/outline";
 import moment from "moment";
 
-export default async function DatumUhrzeit({ state, datetime }: { state: StateFood, datetime?: Date }) {
+export default async function DatumUhrzeit({ state, datetime }: { state: StateFood | StatePoop, datetime?: Date }) {
     if (!datetime) {
         datetime = new Date();
     }
@@ -35,8 +35,8 @@ export default async function DatumUhrzeit({ state, datetime }: { state: StateFo
                     </div>
                 </div>
                 <div id="datum-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.datum &&
-                        state.errors.datum.map((error: string) => (
+                    {(state.errors as StateFood)?.datum &&
+                        (state.errors as StateFood).datum.map((error: string) => (
                             <p className="mt-2 text-sm text-red-500" key={error}>
                                 {error}
                             </p>
@@ -68,8 +68,8 @@ export default async function DatumUhrzeit({ state, datetime }: { state: StateFo
                     </div>
                 </div>
                 <div id="uhrzeit-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.uhrzeit &&
-                        state.errors.uhrzeit.map((error: string) => (
+                    {(state.errors as StateFood)?.uhrzeit &&
+                        (state.errors as StateFood).uhrzeit.map((error: string) => (
                             <p className="mt-2 text-sm text-red-500" key={error}>
                                 {error}
                             </p>

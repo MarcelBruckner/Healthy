@@ -1,10 +1,10 @@
 import { DocumentDuplicateIcon, PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-export function CreateButton({ type }: { type: 'food' | 'poop' }) {
+export function CreateButton({ type }: { type: 'food' | 'toilet' }) {
   const MAPPING = {
     food: "Essen und Trinken anlegen",
-    poop: "Stuhlgang anlegen",
+    toilet: "Toilette anlegen",
   }
 
   return (
@@ -18,7 +18,7 @@ export function CreateButton({ type }: { type: 'food' | 'poop' }) {
   );
 }
 
-export function EditButton({ id, type }: { id: string, type: 'food' | 'poop' }) {
+export function EditButton({ id, type }: { id: string, type: 'food' | 'toilet' }) {
   return (
     <Link
       href={`/dashboard/${type}/${id}/edit`}
@@ -29,7 +29,7 @@ export function EditButton({ id, type }: { id: string, type: 'food' | 'poop' }) 
   );
 }
 
-export function CopyButton({ id, type }: { id: string, type: 'food' | 'poop' }) {
+export function CopyButton({ id, type }: { id: string, type: 'food' | 'toilet' }) {
   return (
     <Link
       href={`/dashboard/${type}/${id}/copy`}
@@ -40,7 +40,7 @@ export function CopyButton({ id, type }: { id: string, type: 'food' | 'poop' }) 
   );
 }
 
-export function DeleteButton({ id, type, deleteFunc }: { id: string, type: 'food' | 'poop', deleteFunc: (id: string) => any }) {
+export function DeleteButton({ id, type, deleteFunc }: { id: string, type: 'food' | 'toilet', deleteFunc: (id: string) => any }) {
   const deleteEntryWithId = deleteFunc.bind(null, id);
 
   return (

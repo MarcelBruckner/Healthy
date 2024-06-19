@@ -22,8 +22,8 @@ const links = [
     href: "/dashboard/food",
     icon: RestaurantMenuOutlinedIcon
   }, {
-    name: "Stuhlgang",
-    href: "/dashboard/poop",
+    name: "Toilette",
+    href: "/dashboard/toilet",
     icon: WcOutlinedIcon
   },
   { name: "Infos", href: "/dashboard/infos", icon: InfoOutlinedIcon }

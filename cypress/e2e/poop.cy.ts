@@ -7,33 +7,33 @@ function openPoop() {
   login();
 
   // Find a link with an href attribute containing "about" and click it
-  cy.get('a[href*="poop"]').click({ multiple: true, force: true });
+  cy.get('a[href*="toilet"]').click({ multiple: true, force: true });
 
   // The new url should include "/about"
-  cy.url().should("include", "/poop");
+  cy.url().should("include", "/toilet");
 
   // The new page should contain an h1 with "About"
-  cy.get("h1").contains("Stuhlgang");
+  cy.get("h1").contains("Toilette");
 }
 
 function deleteAllPoops() {
   createPoop();
-  cy.get(".delete-poop-button").click({ multiple: true, force: true });
+  cy.get(".delete-toilet-button").click({ multiple: true, force: true });
 }
 
 function createPoop() {
-  cy.contains("Stuhlgang anlegen").click();
+  cy.contains("Toilette anlegen").click();
   cy.get("select[name=stuhltyp]").select("3");
   cy.get("textarea[name=stuhlverhalten]").type("Super");
   cy.get("input[name=therapie]").type("Keine");
   cy.get("button").contains("Eintrag anlegen").click();
-  cy.url().should("include", "/poop");
+  cy.url().should("include", "/toilet");
 
   cy.contains("Typ 3");
 }
 
 function editPoop() {
-  cy.get(".edit-poop-button").click({ multiple: true, force: true });
+  cy.get(".edit-toilet-button").click({ multiple: true, force: true });
 
   cy.get("select[name=stuhltyp]").select("4");
   cy.get("textarea[name=stuhlverhalten]").clear();
@@ -45,7 +45,7 @@ function editPoop() {
 }
 
 function copyPoop() {
-  cy.get(".copy-poop-button").click({ multiple: true, force: true });
+  cy.get(".copy-toilet-button").click({ multiple: true, force: true });
 
   cy.get("select[name=stuhltyp]").select("3");
 
@@ -58,7 +58,7 @@ function copyPoop() {
 }
 
 describe("Food", () => {
-  it("should complete the whole poop entry cycle", () => {
+  it("should complete the whole toilet entry cycle", () => {
     openPoop();
     deleteAllPoops();
 
@@ -75,11 +75,11 @@ describe("Food", () => {
     createPoop();
 
     cy.get("#search").type("Super");
-    cy.get("#poop-table").contains("Super");
+    cy.get("#toilet-table").contains("Super");
 
     cy.get("#search").clear();
     cy.get("#search").type("Nicht gut");
-    cy.get("#poop-table").contains("Super").should("not.exist");
+    cy.get("#toilet-table").contains("Super").should("not.exist");
 
     deleteAllPoops();
   });

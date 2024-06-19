@@ -16,7 +16,7 @@ const iconMap = {
   entries: ClipboardDocumentIcon,
   foods: CakeIcon,
   illness: BeakerIcon,
-  poops: ChevronDoubleDownIcon
+  toilets: ChevronDoubleDownIcon
 };
 
 export default async function CardWrapper() {
@@ -34,7 +34,7 @@ export default async function CardWrapper() {
       <Card
         title="Stuhlgänge"
         value={numberOfPoops}
-        type="poops"
+        type="toilets"
       />
       <Card title="Erkrankungen" value={numberOfDrinks} type="illness" />
     </>
@@ -48,7 +48,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: "entries" | "foods" | "illness" | "poops";
+  type: "entries" | "foods" | "illness" | "toilets";
 }) {
   const Icon = iconMap[type];
 
