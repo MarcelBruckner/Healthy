@@ -1,6 +1,6 @@
 "use client";
 
-import { FoodDB, PoopDB } from "@/app/lib/definitions";
+import { FoodDB, ToiletDB } from "@/app/lib/definitions";
 import { updateFood, updatePoop } from "@/app/lib/actions";
 import Buttons from "../common/form-components/buttons";
 import DatumUhrzeit from "../common/form-components/datum-uhrzeit";
@@ -12,7 +12,7 @@ import Therapie from "./form-components/therapie";
 export default function EditPoopForm({
   toilet: toilet,
 }: {
-  toilet: PoopDB;
+  toilet: ToiletDB;
 }) {
   const initialState = { message: null, errors: {} };
   const updateEntryWithId = updatePoop.bind(null, toilet.id);

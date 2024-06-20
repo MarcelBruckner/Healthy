@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { Food, FoodDB, PoopDB } from "./definitions";
+import { Food, FoodDB, ToiletDB } from "./definitions";
 import { formatCurrency } from "./utils";
 import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
@@ -47,7 +47,7 @@ export async function fetchCardData() {
   }
 }
 
-async function fetchFilteredFoodsUnpaginated(query: string): Promise<FoodDB[]> {
+export async function fetchFilteredFoods(query: string): Promise<FoodDB[]> {
   noStore();
 
   try {
@@ -89,7 +89,9 @@ async function fetchFilteredFoodsUnpaginated(query: string): Promise<FoodDB[]> {
   }
 }
 
-async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
+async function fetchFilteredPoopsUnpaginated(
+  query: string
+): Promise<ToiletDB[]> {
   noStore();
 
   try {
@@ -136,14 +138,6 @@ async function fetchFilteredEntries(
   }
 }
 
-export async function fetchFilteredFoods(query: string, currentPage: number) {
-  return await fetchFilteredEntries(
-    fetchFilteredFoodsUnpaginated,
-    query,
-    currentPage
-  );
-}
-
 export async function fetchFilteredPoops(query: string, currentPage: number) {
   return await fetchFilteredEntries(
     fetchFilteredPoopsUnpaginated,
@@ -155,7 +149,7 @@ export async function fetchFilteredPoops(query: string, currentPage: number) {
 export async function fetchFoodPages(query: string) {
   noStore();
   try {
-    const foods = await fetchFilteredFoodsUnpaginated(query);
+    const foods = await fetchFilteredFoods(query);
 
     const totalPages = Math.ceil(Number(foods.length) / ITEMS_PER_PAGE);
     return totalPages;
@@ -220,7 +214,7 @@ export async function fetchFoods(): Promise<FoodDB[]> {
   }
 }
 
-export async function fetchPoops(): Promise<PoopDB[]> {
+export async function fetchPoops(): Promise<ToiletDB[]> {
   noStore();
 
   try {

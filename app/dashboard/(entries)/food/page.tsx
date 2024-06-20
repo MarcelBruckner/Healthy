@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { fetchFoodPages as fetchFoodPages } from "@/app/lib/data";
 import { Metadata } from "next";
 import { CreateButton } from "@/app/ui/dashboard/common/buttons";
+import { Box, Grid, Typography } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Essen und Trinken"
@@ -23,23 +24,21 @@ export default async function Page({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const totalPages = await fetchFoodPages(query);
-
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Essen und Trinken</h1>
-      </div>
-      <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8">
+    <>
+      <Typography variant="h4" component="div">
+        Essen und Trinken
+      </Typography>
+
+      <CreateButton type="food" />
+
+      <Box paddingBottom="1rem">
         <Search placeholder="Durchsuche Essen und Trinken..." />
-        <CreateButton type="food" />
-      </div>
+      </Box>
+
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />
       </Suspense>
-      <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={totalPages} />
-      </div>
-    </div>
+    </>
   );
 }

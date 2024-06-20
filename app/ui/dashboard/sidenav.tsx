@@ -80,7 +80,7 @@ export default function ResponsiveDrawer({ children }: { children: React.ReactNo
           >
             <MenuIcon />
           </IconButton>
-          <HealthyLogo />
+          Healthy
 
         </Toolbar>
       </AppBar>
@@ -121,7 +121,9 @@ export default function ResponsiveDrawer({ children }: { children: React.ReactNo
         sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
-        {children}
+        <div style={{ padding: 8, height: "100%" }}>
+          {children}
+        </div>
       </Box>
     </Box>
   );

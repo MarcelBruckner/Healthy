@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { Food, Poop } from "./definitions";
+import { Food, Toilet } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn, signOut } from "@/auth";
@@ -54,6 +54,7 @@ export type StatePoop = {
     stuhlmenge?: string[];
     stuhldruck?: string[];
     therapie?: string[];
+    anmerkungen?: string[];
   };
   message?: string | null;
 };
@@ -142,7 +143,7 @@ function validateFoodFormData(formData: FormData): Food {
   return food;
 }
 
-function validatePoopFormData(formData: FormData): Poop {
+function validatePoopFormData(formData: FormData): Toilet {
   let validatedFields = CreatePoop.safeParse({
     datum: formData.get("datum"),
     uhrzeit: formData.get("uhrzeit"),
@@ -178,7 +179,7 @@ function validatePoopFormData(formData: FormData): Poop {
     throw errors;
   }
 
-  const toilet: Poop = {
+  const toilet: Toilet = {
     datetime: datetime.toDate(),
     urinmenge: validatedFields.data.urinmenge,
     urindruck: validatedFields.data.urindruck,
@@ -219,7 +220,7 @@ export async function createFood(prevState: StateFood, formData: FormData) {
     const validatedFields = validateFoodFormData(formData);
     await prisma?.food.create({ data: validatedFields });
   } catch (err) {
-    return handleFoodError(err);
+    return handleFoodError(err) as StateFood;
   }
   revalidatePath("/dashboard/food");
   redirect("/dashboard/food");
@@ -296,7 +297,7 @@ export async function deleteFood(id: string) {
     };
   }
 }
-export async function deletePoop(id: string) {
+export async function deleteToilet(id: string) {
   try {
     await prisma?.toilet.delete({ where: { id: id } });
     revalidatePath("/dashboard/toilet");

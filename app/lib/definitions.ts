@@ -10,7 +10,7 @@ export type Food = {
 
 export type FoodDB = Food & { id: string };
 
-export type Poop = {
+export type Toilet = {
   datetime: Date;
   urinmenge: number;
   urindruck: number;
@@ -22,4 +22,4 @@ export type Poop = {
   anmerkungen: string;
 };
 
-export type PoopDB = Poop & { id: string };
+export type ToiletDB = Toilet & { id: string };

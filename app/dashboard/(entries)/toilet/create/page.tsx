@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
-import CreatePoopForm from "@/app/ui/dashboard/toilet/create-form";
+import CreateToiletForm from "@/app/ui/dashboard/toilet/create-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default async function Page() {
                     }
                 ]}
             />
-            <CreatePoopForm />
+            <CreateToiletForm />
         </main>
     );
 }

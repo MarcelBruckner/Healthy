@@ -1,9 +1,10 @@
 import { fetchFilteredPoops } from "@/app/lib/data";
-import { PoopDB } from "@/app/lib/definitions";
+import { ToiletDB } from "@/app/lib/definitions";
 import { ChartBarIcon, EyeDropperIcon } from "@heroicons/react/24/outline";
 import { formatDatetime } from "@/app/lib/utils";
 import { CopyButton, DeleteButton, EditButton } from "../common/buttons";
-import { deleteFood, deletePoop } from "@/app/lib/actions";
+import { deleteFood, deleteToilet } from "@/app/lib/actions";
+import DataTable from "./table-large-screen";
 
 export default async function FoodsTable({
   query,
@@ -12,7 +13,7 @@ export default async function FoodsTable({
   query: string;
   currentPage: number;
 }) {
-  const entries: PoopDB[] = await fetchFilteredPoops(query, currentPage);
+  const entries: ToiletDB[] = await fetchFilteredPoops(query, currentPage);
 
   function SmallEntry({ type, value }: {
     type: "stuhlverhalten" | "therapie", value: string
@@ -57,7 +58,7 @@ export default async function FoodsTable({
                   <div className="flex justify-end gap-2">
                     <EditButton type="toilet" id={entry.id!} />
                     <CopyButton type="toilet" id={entry.id} />
-                    <DeleteButton type="toilet" id={entry.id!} deleteFunc={deletePoop} />
+                    <DeleteButton type="toilet" id={entry.id!} deleteFunc={deleteToilet} />
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
@@ -73,51 +74,9 @@ export default async function FoodsTable({
               </div>
             ))}
           </div>
-          <table className="hidden min-w-full text-gray-900 xl:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
-              <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Datum
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Stuhlverhalten
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Therapie
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {entries.map(entry => (
-                <tr
-                  key={entry.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {formatDatetime(entry.datetime)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {entry.stuhltyp > 0 ? `Typ ${entry.stuhltyp}` : ""}
-                    {entry.stuhltyp > 0 && entry.stuhlverhalten ? ": " : ""}
-                    {entry.stuhlverhalten ? entry.stuhlverhalten : ""}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {entry.therapie}
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      <EditButton type="toilet" id={entry.id!} />
-                      <CopyButton type="toilet" id={entry.id} />
-                      <DeleteButton type="toilet" id={entry.id!} deleteFunc={deletePoop} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="hidden xl:block">
+            <DataTable rows={entries} />
+          </div>
         </div>
       </div>
     </div>

@@ -110,3 +110,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 export function formatDatetime(datetime: Date) {
   return moment(datetime).format("YYYY-MM-DD HH:mm");
 }
+
+export function isFood(value: any): value is Food {
+  return (value as Food).speisen !== undefined;
+}

@@ -1,7 +1,7 @@
 import { StateFood, StatePoop } from "@/app/lib/actions";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 
-export default async function Anmerkungen({ state, anmerkungen }: { state: StatePoop, anmerkungen?: string }) {
+export default async function Anmerkungen({ state, anmerkungen }: { state: StateFood | StatePoop, anmerkungen?: string }) {
     return (
         <div className="mb-4">
             <label
