@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           }
         ]}
       />
-      <Form food={food} />
+      <Form food={food} copy />
     </main>
   );
 }

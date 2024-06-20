@@ -1,55 +1,103 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import DatumUhrzeit from "../common/form-components/datum-uhrzeit";
-import Ort from "./form-components/ort";
-import Motivation from "./form-components/motivation";
-import Speisen from "./form-components/speisen";
-import Getraenke from "./form-components/getraenke";
-import Beschwerden from "./form-components/beschwerden";
-import Buttons from "../common/form-components/buttons";
 import Errors from "../common/form-components/errors";
-import { createFood } from "@/app/lib/actions";
+import { StateFood, createFood, updateFood } from "@/app/lib/actions";
 import { FoodDB } from "@/app/lib/definitions";
-import Anmerkungen from "./form-components/anmerkungen";
+import { Box, Button, Card, CardActions, CardContent, Grid, Input, TextField } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import moment from "moment";
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import RestaurantOutlinedIcon from '@mui/icons-material/RestaurantOutlined';
+import WineBarOutlinedIcon from '@mui/icons-material/WineBarOutlined';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
+import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
+import { useRouter } from 'next/navigation'  // Usage: App router
+import BasicFormControl from "../common/form-control";
+import DateFormControl from "../common/date-form-control";
+import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import TimeFormControl from "../common/time-form-control";
 
 export default function CreateFoodForm({
   food,
+  copy
 }: {
   food?: FoodDB;
+  copy?: boolean
 }) {
+  const router = useRouter()
+
   const initialState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState(createFood, initialState);
 
-  return (
-    <form action={dispatch}>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <DatumUhrzeit state={state} />
-        {!food ? <>
-          <Ort state={state} />
-          <Motivation state={state} />
-          <Speisen state={state} />
-          <Getraenke state={state} />
-          <Beschwerden state={state} />
-          <Anmerkungen state={state} />
-        </> :
-          <>
-            <Ort state={state} ort={food.ort} />
-            <Motivation state={state} motivation={food.motivation} />
-            <Speisen state={state} speisen={food.speisen} />
-            <Getraenke state={state} getraenke={food.getraenke} />
-            <Beschwerden state={state} beschwerden={food.beschwerden} />
-            <Anmerkungen state={state} anmerkungen={food.anmerkungen} />
-          </>
-        }
+  function Line({ children }: { children: React.ReactNode }) {
+    return <Grid item xs={12}>
+      {children}
+    </Grid >
+  }
 
-        <Errors state={state} />
-      </div>
-      {!food ?
-        <Buttons type="food" submit="Eintrag anlegen" />
-        :
-        <Buttons type="food" submit="Eintrag kopieren" />
-      }
+  function Lines({ food, state, dispatch }: { food?: FoodDB, state: StateFood, dispatch: any }) {
+    return <form action={dispatch}>
+      <Card key={food?.id} >
+        <CardContent>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <DateFormControl id="datum" value={moment(food?.datetime).format("YYYY-MM-DD")} label="Datum" errors={state.errors?.datum} />
+            </Grid >
+            <Grid item xs={12}>
+              <TimeFormControl id="uhrzeit" value={moment(food?.datetime).format("HH:mm:ss")} label="Uhrzeit" errors={state.errors?.uhrzeit} />
+            </Grid >
+            <Grid item xs={12}>
+              <BasicFormControl icon={PlaceOutlinedIcon} id="ort" label="Ort" value={food?.ort} errors={state.errors?.ort} />
+            </Grid >
+            <Grid item xs={12}>
+              <BasicFormControl icon={GroupsOutlinedIcon} id="motivation" label="Motivation" value={food?.motivation} errors={state.errors?.motivation} />
+            </Grid >
+            <Grid item xs={12}>
+              <BasicFormControl icon={RestaurantOutlinedIcon} id="speisen" label="Speisen" value={food?.speisen} errors={state.errors?.speisen} />
+            </Grid >
+            <Grid item xs={12}>
+              <BasicFormControl icon={WineBarOutlinedIcon} id="getraenke" label="Getränke" value={food?.getraenke} errors={state.errors?.getraenke} />
+            </Grid >
+            <Grid item xs={12}>
+              <BasicFormControl icon={ReportProblemOutlinedIcon} id="beschwerden" label="Beschwerden" value={food?.beschwerden} errors={state.errors?.beschwerden} />
+            </Grid >
+            <Grid item xs={12}>
+              <BasicFormControl icon={ContentPasteOutlinedIcon} id="anmerkungen" label="Anmerkungen" value={food?.anmerkungen} errors={state.errors?.anmerkungen} />
+            </Grid >
+            <Grid item xs={12}>
+              <Errors state={state} />
+            </Grid >
+          </Grid>
+        </CardContent>
+        <CardActions sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "flex-start",
+        }}>
+          <Button variant="outlined" onClick={() => router.back()}>Abbrechen</Button>
+          <Button type="submit" variant="contained">Speichern</Button>
+        </CardActions>
+      </Card >
     </form>
-  );
+  }
+
+  if (!food) {
+    const [state, dispatch] = useFormState(createFood, initialState);
+    return <Lines state={state} dispatch={dispatch}></Lines>
+  }
+
+  if (copy) {
+    const [state, dispatch] = useFormState(createFood, initialState);
+    return <Lines state={state} food={food} dispatch={dispatch}></Lines>
+  }
+
+  const updateEntryWithId = updateFood.bind(null, food.id);
+  const [state, dispatch] = useFormState(updateEntryWithId, initialState);
+
+  return <Lines state={state} food={food} dispatch={dispatch}></Lines>
 }

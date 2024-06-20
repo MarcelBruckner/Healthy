@@ -16,7 +16,9 @@ export function CreateButton({ type }: { type: 'food' | 'toilet' }) {
     'food': "Essen und Trinken",
     'toilet': "Toilette"
   }
-  return <Fab color="primary" variant="extended" style={{ position: 'fixed', zIndex: 1, right: 30, bottom: 30 }}>
+  return <Fab color="primary" variant="extended" style={{ position: 'fixed', zIndex: 1, right: 30, bottom: 30 }}
+    href={`/dashboard/${type}/create`}
+  >
     <AddIcon sx={{ mr: 1 }} />
     {MAPPING[type]} hinzufügen
   </Fab>

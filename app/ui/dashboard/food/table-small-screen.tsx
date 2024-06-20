@@ -12,7 +12,7 @@ import RestaurantOutlinedIcon from '@mui/icons-material/RestaurantOutlined';
 import WineBarOutlinedIcon from '@mui/icons-material/WineBarOutlined';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
-import { CopyButton, DeleteButton, EditButton } from "../../common/buttons";
+import { CopyButton, DeleteButton, EditButton } from "../common/buttons";
 
 export default async function Cards({ entries }: { entries: FoodDB[] }) {
     function Line({ icon, value }: { icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; }, value: any }) {
@@ -23,7 +23,7 @@ export default async function Cards({ entries }: { entries: FoodDB[] }) {
         return <>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
-                    <Icon />
+                    <Icon sx={{ color: 'action.active' }} />
                 </Grid>
                 <Grid item xs={11}>
                     <Typography>{value}</Typography>

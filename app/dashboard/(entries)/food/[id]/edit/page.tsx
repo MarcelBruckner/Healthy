@@ -1,4 +1,4 @@
-import Form from "@/app/ui/dashboard/food/edit-form";
+import Form from "@/app/ui/dashboard/food/create-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
 import { fetchFoodById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
