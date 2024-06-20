@@ -21,9 +21,9 @@ export default function DataTable({ rows }: { rows: FoodDB[] }) {
                 const id = params.formattedValue as string;
 
                 return <>
-                    <EditButton type="food" id={id} />
-                    <CopyButton type="food" id={id} />
-                    <DeleteButton type="food" id={id} deleteFunc={deleteFood} />
+                    <EditButton type="toilet" id={id} />
+                    <CopyButton type="toilet" id={id} />
+                    <DeleteButton type="toilet" id={id} deleteFunc={deleteFood} />
                 </>
             }
         },

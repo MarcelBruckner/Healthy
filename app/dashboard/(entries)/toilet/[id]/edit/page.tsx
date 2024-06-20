@@ -1,4 +1,4 @@
-import Form from "@/app/ui/dashboard/toilet/edit-form";
+import Form from "@/app/ui/dashboard/toilet/create-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";

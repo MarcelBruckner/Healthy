@@ -1,11 +1,11 @@
-import { StateFood, StatePoop } from "@/app/lib/actions";
+import { StateFood, StateToilet } from "@/app/lib/actions";
 import {
     CalendarIcon,
     ClockIcon
 } from "@heroicons/react/24/outline";
 import moment from "moment";
 
-export default async function DatumUhrzeit({ state, datetime }: { state: StateFood | StatePoop, datetime?: Date }) {
+export default async function DatumUhrzeit({ state, datetime }: { state: StateFood | StateToilet, datetime?: Date }) {
     if (!datetime) {
         datetime = new Date();
     }

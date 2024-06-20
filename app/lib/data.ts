@@ -1,11 +1,7 @@
-import { sql } from "@vercel/postgres";
-import { Food, FoodDB, ToiletDB } from "./definitions";
-import { formatCurrency } from "./utils";
+import { FoodDB, ToiletDB } from "./definitions";
 import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
-import moment from "moment";
 import prisma from "./prisma";
-const { stringify } = require("csv-stringify/sync");
 
 function getDataPath() {
   if (process.env.DATA_PATH) {
@@ -89,9 +85,7 @@ export async function fetchFilteredFoods(query: string): Promise<FoodDB[]> {
   }
 }
 
-async function fetchFilteredPoopsUnpaginated(
-  query: string
-): Promise<ToiletDB[]> {
+export async function fetchFilteredToilets(query: string): Promise<ToiletDB[]> {
   noStore();
 
   try {
@@ -122,29 +116,6 @@ async function fetchFilteredPoopsUnpaginated(
 }
 
 const ITEMS_PER_PAGE = 6;
-async function fetchFilteredEntries(
-  fetchFunc: (query: string) => Promise<any[]>,
-  query: string,
-  currentPage: number
-) {
-  try {
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const filteredEntries = await fetchFunc(query);
-
-    return filteredEntries.slice(offset, offset + ITEMS_PER_PAGE);
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch invoices.");
-  }
-}
-
-export async function fetchFilteredPoops(query: string, currentPage: number) {
-  return await fetchFilteredEntries(
-    fetchFilteredPoopsUnpaginated,
-    query,
-    currentPage
-  );
-}
 
 export async function fetchFoodPages(query: string) {
   noStore();

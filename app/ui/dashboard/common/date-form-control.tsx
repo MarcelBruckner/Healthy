@@ -7,7 +7,7 @@ import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 
 export default function DateFormControl({ id, value, label, multiline, errors }: { id: string, value?: string, label: string, multiline?: boolean, errors?: string[] }) {
     return (
-        <FormControl defaultValue="">
+        <FormControl key={id} defaultValue="">
             <Box sx={{ display: 'flex', alignItems: 'flex-end', alignContent: 'top', width: 'full' }}>
                 <TodayOutlinedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                 <Label >{label}</Label>

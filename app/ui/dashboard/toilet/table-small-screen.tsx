@@ -1,6 +1,6 @@
-import { FoodDB } from "@/app/lib/definitions";
+import { ToiletDB } from "@/app/lib/definitions";
 import { formatDatetime } from "@/app/lib/utils";
-import { deleteFood } from "@/app/lib/actions";
+import { deleteFood, deleteToilet } from "@/app/lib/actions";
 import { CardActions, Divider, Grid, SvgIconTypeMap, Typography } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -13,8 +13,9 @@ import WineBarOutlinedIcon from '@mui/icons-material/WineBarOutlined';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import { CopyButton, DeleteButton, EditButton } from "../common/buttons";
+import { ColorLensOutlined, CompressOutlined, ContentPasteOutlined, FormatListNumberedOutlined, MedicalServicesOutlined, ShowChartOutlined, WaterDropOutlined } from "@mui/icons-material";
 
-export default async function Cards({ entries }: { entries: FoodDB[] }) {
+export default async function Cards({ entries }: { entries: ToiletDB[] }) {
     function Line({ icon, value }: { icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; }, value: any }) {
         const Icon = icon;
         if (!value) {
@@ -41,13 +42,14 @@ export default async function Cards({ entries }: { entries: FoodDB[] }) {
                             {formatDatetime(entry.datetime)}
                         </Typography>
                         <Divider sx={{ marginY: 1 }} />
-
-                        <Line icon={PlaceOutlinedIcon} value={entry.ort} />
-                        <Line icon={GroupsOutlinedIcon} value={entry.motivation} />
-                        <Line icon={RestaurantOutlinedIcon} value={entry.speisen} />
-                        <Line icon={WineBarOutlinedIcon} value={entry.getraenke} />
-                        <Line icon={ReportProblemOutlinedIcon} value={entry.beschwerden} />
-                        <Line icon={ContentPasteOutlinedIcon} value={entry.anmerkungen} />
+                        <Line icon={WaterDropOutlined} value={entry.urinmenge} />
+                        <Line icon={CompressOutlined} value={entry.urindruck} />
+                        <Line icon={FormatListNumberedOutlined} value={`Typ ${entry.stuhltyp}`} />
+                        <Line icon={ColorLensOutlined} value={entry.stuhlfarbe} />
+                        <Line icon={ShowChartOutlined} value={entry.stuhlmenge} />
+                        <Line icon={CompressOutlined} value={entry.stuhldruck} />
+                        <Line icon={MedicalServicesOutlined} value={entry.therapie} />
+                        <Line icon={ContentPasteOutlined} value={entry.anmerkungen} />
                     </CardContent>
 
                     <CardActions sx={{
@@ -55,9 +57,9 @@ export default async function Cards({ entries }: { entries: FoodDB[] }) {
                         justifyContent: "flex-end",
                         alignItems: "flex-start",
                     }}>
-                        <EditButton id={entry.id} type="food" />
-                        <CopyButton id={entry.id} type="food" />
-                        <DeleteButton id={entry.id} type="food" deleteFunc={deleteFood} />
+                        <EditButton id={entry.id} type="toilet" />
+                        <CopyButton id={entry.id} type="toilet" />
+                        <DeleteButton id={entry.id} type="toilet" deleteFunc={deleteToilet} />
                     </CardActions>
                 </Card >
             )

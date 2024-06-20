@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ToiletDB } from '@/app/lib/definitions';
 import { formatDatetime } from '@/app/lib/utils';
-import { deleteFood, deleteToilet } from '@/app/lib/actions';
+import { deleteFood } from '@/app/lib/actions';
 import { EditButton, CopyButton, DeleteButton } from '../common/buttons';
+import { ToiletDB } from '@/app/lib/definitions';
 
 export default function DataTable({ rows }: { rows: ToiletDB[] }) {
     const columns: GridColDef[] = [
@@ -23,9 +23,9 @@ export default function DataTable({ rows }: { rows: ToiletDB[] }) {
                 const id = params.formattedValue as string;
 
                 return <>
-                    <EditButton type="toilet" id={id} />
-                    <CopyButton type="toilet" id={id} />
-                    <DeleteButton type="toilet" id={id} deleteFunc={deleteToilet} />
+                    <EditButton type="food" id={id} />
+                    <CopyButton type="food" id={id} />
+                    <DeleteButton type="food" id={id} deleteFunc={deleteFood} />
                 </>
             }
         },
