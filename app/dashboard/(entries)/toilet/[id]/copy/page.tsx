@@ -1,6 +1,6 @@
 import Form from "@/app/ui/dashboard/toilet/create-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
-import { fetchFoodById, fetchPoopById as fetchToiletById } from "@/app/lib/data";
+import { fetchPoopById as fetchToiletById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 

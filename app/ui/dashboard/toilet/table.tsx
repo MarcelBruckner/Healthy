@@ -1,5 +1,5 @@
-import { fetchFilteredFoods, fetchFilteredToilets } from "@/app/lib/data";
-import { FoodDB, ToiletDB } from "@/app/lib/definitions";
+import { fetchFilteredToilets } from "@/app/lib/data";
+import { ToiletDB } from "@/app/lib/definitions";
 import DataTable from "./table-large-screen";
 import { Box } from "@mui/material";
 import React from "react";

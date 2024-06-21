@@ -1,18 +1,20 @@
-import Link from "next/link";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import { SentimentDissatisfiedOutlined } from '@mui/icons-material';
+import { Box, Typography, Button } from "@mui/material";
 
 export default function NotFoundBase({ message, href }: { message: string, href: string }) {
   return (
-    <main className="flex h-full flex-col items-center justify-center gap-2">
-      <FaceFrownIcon className="w-10 text-gray-400" />
-      <h2 className="text-xl font-semibold">404 Not Found</h2>
-      <p>{message}</p>
-      <Link
-        href={href}
-        className="mt-4 rounded-md bg-brand-500 px-4 py-2 text-sm text-white transition-colors hover:bg-brand-400"
-      >
-        Zurück
-      </Link>
+    <main >
+      <Box height="70vh" width="100%" display="flex" justifyContent="center" alignItems="center">
+        <Box>
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            <SentimentDissatisfiedOutlined sx={{ color: 'action.active', mr: 1, fontSize: '40' }} />
+            404 Not Found!</Typography>
+          <Typography variant="body1" fontWeight="bold" gutterBottom>{message}</Typography>
+          <Button variant="contained" href={href}          >
+            Zurück
+          </Button>
+        </Box>
+      </Box>
     </main>
   );
 }
