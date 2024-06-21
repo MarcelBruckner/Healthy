@@ -2,7 +2,7 @@ import Form from "@/app/ui/dashboard/toilet/edit-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { fetchPoopById } from "@/app/lib/data";
+import { fetchPoopById as fetchToiletById } from "@/app/lib/data";
 
 export const metadata: Metadata = {
   title: "Toilette bearbeiten"
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const toilet = await fetchPoopById(id);
+  const toilet = await fetchToiletById(id);
   if (!toilet) {
     notFound();
   }

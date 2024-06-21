@@ -13,47 +13,48 @@ function openFood() {
   cy.url().should("include", "/food");
 
   // The new page should contain an h1 with "About"
-  cy.get("h1").contains("Essen und Trinken");
+  cy.contains("Essen und Trinken");
 }
 
 function deleteAllFoods() {
   createFood();
-  cy.get(".delete-food-button").click({ multiple: true, force: true });
+  cy.get("#delete").click({ multiple: true, force: true });
 }
 
 function createFood() {
-  cy.contains("Essen und Trinken anlegen").click();
+  cy.get("#create").click();
   cy.get("input[name=ort]").type("München");
   cy.get("input[name=motivation]").type("Essen mit Freunden");
-  cy.get("textarea[name=speisen]").type("Spaghetti Bolognese");
-  cy.get("textarea[name=getraenke]").type("1 Flasche Rotwein");
+  cy.get("input[name=speisen]").type("Spaghetti Bolognese");
+  cy.get("input[name=getraenke]").type("1 Flasche Rotwein");
   cy.get("input[name=beschwerden]").type("Suff");
-  cy.get("button").contains("Eintrag anlegen").click();
+  cy.get("input[name=anmerkungen]").type("Hehe");
+  cy.get("button").contains("Speichern").click();
   cy.url().should("include", "/food");
 
-  cy.contains("Essen und Trinken anlegen");
   cy.contains("München");
   cy.contains("Essen mit Freunden");
   cy.contains("Spaghetti Bolognese");
   cy.contains("1 Flasche Rotwein");
   cy.contains("Suff");
+  cy.contains("Hehe");
 }
 
 function editFood() {
-  cy.get(".edit-food-button").click({ multiple: true, force: true });
+  cy.get("#edit").click({ multiple: true, force: true });
 
   cy.get("input[name=ort]").clear();
   cy.get("input[name=ort]").type("Kempten");
-  cy.get("button").contains("Eintrag bearbeiten").click();
+  cy.get("button").contains("Speichern").click();
 
   cy.contains("Kempten");
 }
 
 function copyFood() {
-  cy.get(".copy-food-button").click({ multiple: true, force: true });
+  cy.get("#copy").click({ multiple: true, force: true });
   cy.get("input[name=ort]").clear();
   cy.get("input[name=ort]").type("München");
-  cy.get("button").contains("Eintrag kopieren").click();
+  cy.get("button").contains("Speichern").click();
 
   cy.contains("Kempten");
   cy.contains("München");
@@ -77,11 +78,11 @@ describe("Food", () => {
     createFood();
 
     cy.get("#search").type("München");
-    cy.get("#food-table").contains("München");
+    cy.get("main").contains("München");
 
     cy.get("#search").clear();
     cy.get("#search").type("Kempten");
-    cy.get("#food-table").contains("München").should("not.exist");
+    cy.get("main").contains("München").should("not.exist");
 
     deleteAllFoods();
   });

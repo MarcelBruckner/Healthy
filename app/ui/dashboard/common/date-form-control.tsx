@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import clsx from 'clsx';
 import { Box, Input } from '@mui/material';
 import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
+import moment from 'moment';
 
 export default function DateFormControl({ id, value, label, multiline, errors }: { id: string, value?: string, label: string, multiline?: boolean, errors?: string[] }) {
     return (
@@ -20,6 +21,7 @@ export default function DateFormControl({ id, value, label, multiline, errors }:
                 sx={{ width: '100%' }}
                 defaultValue={value}
                 error={errors ? true : false}
+                inputProps={{ max: moment().format("YYYY-MM-DD") }}
             />
             <HelperText errors={errors} />
         </FormControl>

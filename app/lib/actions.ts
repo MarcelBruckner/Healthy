@@ -76,7 +76,7 @@ const FormSchemaFood = z.object({
 const FormSchemaPoop = z.object({
   id: z.string(),
   datum: z.string().date(),
-  uhrzeit: z.string().time(),
+  uhrzeit: z.string(),
   urinmenge: z.coerce.number(),
   urindruck: z.coerce.number(),
   stuhltyp: z.coerce.number(),
@@ -93,9 +93,9 @@ const CreatePoop = FormSchemaPoop.omit({ id: true });
 function validateDatetime(datum: string, uhrzeit: string) {
   const datetime = moment(datum + " " + uhrzeit, "YYYY-MM-DD HH:mm");
 
-  if (datetime.isAfter(Date.now())) {
+  if (datetime.isAfter(moment().add(1, "days").toDate())) {
     throw {
-      errors: Object.assign({}, DATETIME_ERROR),
+      errors: DATETIME_ERROR,
       message: "Das Datum darf nicht in der Zukunft liegen!"
     };
   }
@@ -255,7 +255,7 @@ export async function updatePoop(
     const validatedFields = validateToiletFormData(formData);
     await prisma?.toilet.update({ where: { id: id }, data: validatedFields });
   } catch (err) {
-    return handleFoodError(err);
+    return handleFoodError(err) as StateToilet;
   }
   revalidatePath("/dashboard/toilet");
   redirect("/dashboard/toilet");

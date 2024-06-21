@@ -51,8 +51,8 @@ export default function LoginForm() {
           </Typography>
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="flex-end" >
-          <Button type="submit" variant="contained" aria-disabled={pending}>
-            Login
+          <Button id="login" type="submit" variant="contained" aria-disabled={pending}>
+            Log In
           </Button>
         </Grid>
       </Grid>

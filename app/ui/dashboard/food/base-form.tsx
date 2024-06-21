@@ -28,7 +28,7 @@ export default function BaseForm({ food, state, dispatch }: { food?: FoodDB, sta
             <DateFormControl id="datum" value={moment(food?.datetime).format("YYYY-MM-DD")} label="Datum" errors={state.errors?.datum} />
           </Grid >
           <Grid item xs={12}>
-            <TimeFormControl id="uhrzeit" value={moment(food?.datetime).format("HH:mm:ss")} label="Uhrzeit" errors={state.errors?.uhrzeit} />
+            <TimeFormControl id="uhrzeit" value={moment(food?.datetime).format("HH:mm")} label="Uhrzeit" errors={state.errors?.uhrzeit} />
           </Grid >
           <Grid item xs={12}>
             <BasicFormControl icon={PlaceOutlinedIcon} id="ort" label="Ort" value={food?.ort} errors={state.errors?.ort} />

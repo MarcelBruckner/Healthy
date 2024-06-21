@@ -26,7 +26,7 @@ export default async function Page({
 
   return (
     <>
-      <Typography variant="h4" component="div">
+      <Typography variant="h4" fontWeight='bold' gutterBottom>
         Essen und Trinken
       </Typography>
 

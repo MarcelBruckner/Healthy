@@ -28,7 +28,7 @@ export default function BaseForm({ toilet, state, dispatch }: { toilet?: ToiletD
             <DateFormControl id="datum" value={moment(toilet?.datetime).format("YYYY-MM-DD")} label="Datum" errors={state.errors?.datum} />
           </Grid >
           <Grid item xs={12}>
-            <TimeFormControl id="uhrzeit" value={moment(toilet?.datetime).format("HH:mm:ss")} label="Uhrzeit" errors={state.errors?.uhrzeit} />
+            <TimeFormControl id="uhrzeit" value={moment(toilet?.datetime).format("HH:mm")} label="Uhrzeit" errors={state.errors?.uhrzeit} />
           </Grid >
           <Grid item xs={12}>
             <SelectFormControl icon={WaterDropOutlined} id="urinmenge" label="Urinmenge" value={toilet?.urinmenge} values={WENIG_NORMAL_VIEL} errors={state.errors?.urinmenge} />

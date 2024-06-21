@@ -23,8 +23,9 @@ export default function SelectFormControl({ id, value, values, defaultValue, lab
                     error={!!errors}
                     fullWidth
                     variant='standard'
+                    data-cy={id}
                 >
-                    {values.map((value, index) => <MenuItem key={value} id={value} value={index}>{value}</MenuItem>)}
+                    {values.map((value, index) => <MenuItem key={value} id={value} value={index} data-cy={`${id}-${index}`}>{value}</MenuItem>)}
                 </Select>
             </FormControl >
 

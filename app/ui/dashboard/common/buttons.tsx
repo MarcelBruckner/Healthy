@@ -16,7 +16,7 @@ export function CreateButton({ type }: { type: 'food' | 'toilet' }) {
     'food': "Essen und Trinken",
     'toilet': "Toilette"
   }
-  return <Fab color="primary" variant="extended" style={{ position: 'fixed', zIndex: 1, right: 30, bottom: 30 }}
+  return <Fab id='create' color="primary" variant="extended" style={{ position: 'fixed', zIndex: 1, right: 30, bottom: 30 }}
     href={`/dashboard/${type}/create`}
   >
     <AddIcon sx={{ mr: 1 }} />
@@ -26,7 +26,7 @@ export function CreateButton({ type }: { type: 'food' | 'toilet' }) {
 
 export function EditButton({ id, type }: { id: string, type: 'food' | 'toilet' }) {
   return (
-    <IconButton
+    <IconButton id="edit"
       onClick={(e: React.MouseEvent) => {
         e.stopPropagation(); // don't select this row after clicking
       }}
@@ -38,7 +38,7 @@ export function EditButton({ id, type }: { id: string, type: 'food' | 'toilet' }
 }
 export function CopyButton({ id, type }: { id: string, type: 'food' | 'toilet' }) {
   return (
-    <IconButton
+    <IconButton id="copy"
       onClick={(e: React.MouseEvent) => {
         e.stopPropagation(); // don't select this row after clicking
       }}
@@ -53,12 +53,12 @@ export function DeleteButton({ id, type, deleteFunc }: { id: string, type: 'food
   const deleteEntryWithId = deleteFunc.bind(null, id);
 
   return (
-    <IconButton
+    <IconButton id="delete"
       onClick={(e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation(); // don't select this row after clicking
         deleteEntryWithId();
       }}
-      href="#"
     >
       <DeleteOutlinedIcon />
     </IconButton>
