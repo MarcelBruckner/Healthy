@@ -10,12 +10,12 @@ import { EditButton, CopyButton, DeleteButton } from '../common/buttons';
 export default function DataTable({ rows }: { rows: FoodDB[] }) {
     const columns: GridColDef[] = [
         { field: 'datetime', headerName: 'Datum', width: 130, valueGetter: (value) => formatDatetime(value) },
-        { field: 'ort', headerName: 'Ort', minWidth: 110 },
-        { field: 'motivation', headerName: 'Motivation', minWidth: 110 },
-        { field: 'speisen', headerName: 'Speisen', minWidth: 110 },
-        { field: 'getraenke', headerName: 'Getränke', minWidth: 110 },
-        { field: 'beschwerden', headerName: 'Beschwerden', minWidth: 110 },
-        { field: 'anmerkungen', headerName: 'Anmerkungen', minWidth: 110 },
+        { field: 'ort', headerName: 'Ort', minWidth: 130 },
+        { field: 'motivation', headerName: 'Motivation', minWidth: 130 },
+        { field: 'speisen', headerName: 'Speisen', minWidth: 200 },
+        { field: 'getraenke', headerName: 'Getränke', minWidth: 200 },
+        { field: 'beschwerden', headerName: 'Beschwerden', minWidth: 130 },
+        { field: 'anmerkungen', headerName: 'Anmerkungen', minWidth: 130 },
         {
             field: 'id', headerName: '', width: 150, renderCell: (params) => {
                 const id = params.formattedValue as string;

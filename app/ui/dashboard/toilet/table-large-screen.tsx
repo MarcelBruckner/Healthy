@@ -16,8 +16,8 @@ export default function DataTable({ rows }: { rows: ToiletDB[] }) {
         { field: 'stuhlfarbe', headerName: 'Stuhlfarbe', minWidth: 110, valueGetter: value => STUHLFARBEN[value] },
         { field: 'stuhlmenge', headerName: 'Stuhlmenge', minWidth: 110, valueGetter: value => WENIG_NORMAL_VIEL[value] },
         { field: 'stuhldruck', headerName: 'Stuhldruck', minWidth: 110, valueGetter: value => NIEDRIG_NORMAL_HOCH[value] },
-        { field: 'therapie', headerName: 'Therapie', minWidth: 110 },
-        { field: 'anmerkungen', headerName: 'Anmerkungen', minWidth: 110 },
+        { field: 'therapie', headerName: 'Therapie', minWidth: 130 },
+        { field: 'anmerkungen', headerName: 'Anmerkungen', minWidth: 130 },
         {
             field: 'id', headerName: '', width: 150, renderCell: (params) => {
                 const id = params.formattedValue as string;
