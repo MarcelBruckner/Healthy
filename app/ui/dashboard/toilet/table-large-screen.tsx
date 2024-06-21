@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { BRISTOl_STOOL_SCALA, NIEDRIG_NORMAL_HOCH, STUHLFARBEN, WENIG_NORMAL_VIEL, formatDatetime } from '@/app/lib/utils';
-import { deleteFood } from '@/app/lib/actions';
+import { NIEDRIG_NORMAL_HOCH, STUHLFARBEN, WENIG_NORMAL_VIEL, formatDatetime } from '@/app/lib/utils';
+import { deleteToilet } from '@/app/lib/actions';
 import { EditButton, CopyButton, DeleteButton } from '../common/buttons';
 import { ToiletDB } from '@/app/lib/definitions';
 
@@ -25,7 +25,7 @@ export default function DataTable({ rows }: { rows: ToiletDB[] }) {
                 return <>
                     <EditButton type="toilet" id={id} />
                     <CopyButton type="toilet" id={id} />
-                    <DeleteButton type="toilet" id={id} deleteFunc={deleteFood} />
+                    <DeleteButton type="toilet" id={id} deleteFunc={deleteToilet} />
                 </>
             }
         },
