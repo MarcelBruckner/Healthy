@@ -12,6 +12,7 @@ for (let i = 0; i < 8; i++) {
     ort: faker.location.city(),
     motivation: faker.lorem.words(),
     speisen: faker.lorem.words(),
+    scharf: faker.number.int(),
     getraenke: faker.lorem.words(),
     beschwerden: faker.lorem.words(),
     anmerkungen: faker.lorem.words()
