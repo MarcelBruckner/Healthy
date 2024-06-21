@@ -23,7 +23,7 @@ export default async function CardWrapper() {
       <Card title="Einträge" value={totalNumberOfEntries} type="entries" />
       <Card title="Essen" value={numberOfFoods} type="foods" />
       <Card
-        title="Stuhlgänge"
+        title="Toilette"
         value={numberOfPoops}
         type="toilets"
       />
