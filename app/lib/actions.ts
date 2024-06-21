@@ -64,7 +64,7 @@ export type StateToilet = {
 const FormSchemaFood = z.object({
   id: z.string(),
   datum: z.string().date(),
-  uhrzeit: z.string().time(),
+  uhrzeit: z.string(),
   ort: z.string(),
   motivation: z.string(),
   speisen: z.string(),
@@ -201,9 +201,7 @@ function handleFoodError(err: any) {
     return err as StateToilet;
   }
 
-  return {
-    message: "Unkown state error."
-  };
+  return err;
 }
 
 export async function createFood(prevState: StateFood, formData: FormData) {
@@ -284,6 +282,7 @@ export async function deleteFood(id: string) {
     return { message: "Deleted Entry." };
   } catch (error) {
     return {
+      errors: [],
       message: "Database Error: Failed to Delete Entry."
     };
   }
