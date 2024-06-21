@@ -3,6 +3,7 @@ import groupBy from "lodash/groupBy";
 import { Food, FoodDB } from "./definitions";
 
 export const BRISTOl_STOOL_SCALA = [
+  "",
   "Einzelne, feste Kügelchen, schwer auszuscheiden",
   "Wurstartig, klumpig",
   "Wurstartig mit rissiger Oberfläche",
@@ -11,6 +12,22 @@ export const BRISTOl_STOOL_SCALA = [
   "Einzelne weiche Klümpchen mit unregelmäßigem Rand",
   "Flüssig, ohne feste Bestandteile"
 ];
+
+export const WENIG_NORMAL_VIEL = ["", "Wenig", "Normal", "Viel"];
+export const NIEDRIG_NORMAL_HOCH = ["", "Niedrig", "Normal", "Hoch"];
+export const STUHLFARBEN = [
+  "",
+  "Braun",
+  "Gelb",
+  "Lehmfarben",
+  "Schwarz",
+  "Grün",
+  "Rot"
+];
+
+export function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 export const formatCurrency = (amount: number | string) => {
   return (+amount / 100).toLocaleString("en-US", {
@@ -105,4 +122,8 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 
 export function formatDatetime(datetime: Date) {
   return moment(datetime).format("YYYY-MM-DD HH:mm");
+}
+
+export function isFood(value: any): value is Food {
+  return (value as Food).speisen !== undefined;
 }

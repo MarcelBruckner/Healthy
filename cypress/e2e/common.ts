@@ -1,8 +1,7 @@
 export function login() {
-  cy.contains("Log in").click();
-  cy.get("input").focus();
-  cy.get("input").type("adminadmin");
-  cy.contains("Log in").click();
+  cy.get("#password").focus();
+  cy.get("#password").type("adminadmin");
+  cy.get("#login").click();
 
   cy.contains("Dashboard");
 }

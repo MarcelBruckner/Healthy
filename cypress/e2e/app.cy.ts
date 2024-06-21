@@ -14,6 +14,6 @@ describe("Navigation", () => {
     cy.url().should("include", "/infos");
 
     // The new page should contain an h1 with "About"
-    cy.get("h1").contains("Ernährungs-Symptom-Tagebuch");
+    cy.contains("Ernährungs-Symptom-Tagebuch");
   });
 });

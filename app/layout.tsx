@@ -1,4 +1,3 @@
-import "@/app/ui/global.css";
 import { inter } from "@/app/ui/fonts";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s | Healthy",
     default: "Healthy"
   },
-  description: "Healthy - A self-hosted tracker for your health, eating habits and poop behavior.",
+  description: "Healthy - A self-hosted tracker for your health, eating habits and toilet behavior.",
   metadataBase: new URL("https://github.com/MarcelBruckner/Healthy")
 };
 
@@ -29,7 +28,7 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon/favicon.ico" />
         {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=optional" /> */}
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body className={` antialiased`}>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             {children}

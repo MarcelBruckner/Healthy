@@ -14,9 +14,9 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HealthyLogo from '../healthy-logo';
 import { serverSignOut } from '@/app/lib/actions';
 import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined';
+import { Typography } from '@mui/material';
 
 const drawerWidth = 260;
 
@@ -41,7 +41,7 @@ export default function ResponsiveDrawer({ children }: { children: React.ReactNo
 
   const drawer = (
     <div>
-      <Toolbar />
+      <Toolbar sx={{ bgcolor: 'primary.main' }} />
       <Divider />
       <NavLinks />
 
@@ -80,8 +80,9 @@ export default function ResponsiveDrawer({ children }: { children: React.ReactNo
           >
             <MenuIcon />
           </IconButton>
-          <HealthyLogo />
-
+          <Typography variant='h5'>
+            Healthy
+          </Typography>
         </Toolbar>
       </AppBar>
       <Box
@@ -121,7 +122,9 @@ export default function ResponsiveDrawer({ children }: { children: React.ReactNo
         sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
-        {children}
+        <div style={{ padding: 8, height: "100%" }}>
+          {children}
+        </div>
       </Box>
     </Box>
   );

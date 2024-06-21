@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { Food, Poop } from "./definitions";
+import { Food, Toilet } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn, signOut } from "@/auth";
@@ -45,12 +45,18 @@ export type StateFood = {
   message?: string | null;
 };
 
-export type StatePoop = {
+export type StateToilet = {
   errors?: {
-    anmerkungen?: string[];
+    datum?: string[];
+    uhrzeit?: string[];
+    urinmenge?: string[];
+    urindruck?: string[];
     stuhltyp?: string[];
-    stuhlverhalten?: string[];
+    stuhlfarbe?: string[];
+    stuhlmenge?: string[];
+    stuhldruck?: string[];
     therapie?: string[];
+    anmerkungen?: string[];
   };
   message?: string | null;
 };
@@ -58,7 +64,7 @@ export type StatePoop = {
 const FormSchemaFood = z.object({
   id: z.string(),
   datum: z.string().date(),
-  uhrzeit: z.string().time(),
+  uhrzeit: z.string(),
   ort: z.string(),
   motivation: z.string(),
   speisen: z.string(),
@@ -70,10 +76,15 @@ const FormSchemaFood = z.object({
 const FormSchemaPoop = z.object({
   id: z.string(),
   datum: z.string().date(),
-  uhrzeit: z.string().time(),
+  uhrzeit: z.string(),
+  urinmenge: z.coerce.number(),
+  urindruck: z.coerce.number(),
   stuhltyp: z.coerce.number(),
-  stuhlverhalten: z.string(),
-  therapie: z.string()
+  stuhlfarbe: z.coerce.number(),
+  stuhlmenge: z.coerce.number(),
+  stuhldruck: z.coerce.number(),
+  therapie: z.string(),
+  anmerkungen: z.string()
 });
 
 const CreateFood = FormSchemaFood.omit({ id: true });
@@ -82,9 +93,9 @@ const CreatePoop = FormSchemaPoop.omit({ id: true });
 function validateDatetime(datum: string, uhrzeit: string) {
   const datetime = moment(datum + " " + uhrzeit, "YYYY-MM-DD HH:mm");
 
-  if (datetime.isAfter(Date.now())) {
+  if (datetime.isAfter(moment().add(1, "days").toDate())) {
     throw {
-      errors: Object.assign({}, DATETIME_ERROR),
+      errors: DATETIME_ERROR,
       message: "Das Datum darf nicht in der Zukunft liegen!"
     };
   }
@@ -134,13 +145,18 @@ function validateFoodFormData(formData: FormData): Food {
   return food;
 }
 
-function validatePoopFormData(formData: FormData): Poop {
+function validateToiletFormData(formData: FormData): Toilet {
   let validatedFields = CreatePoop.safeParse({
     datum: formData.get("datum"),
     uhrzeit: formData.get("uhrzeit"),
+    urinmenge: formData.get("urinmenge"),
+    urindruck: formData.get("urindruck"),
     stuhltyp: formData.get("stuhltyp"),
-    stuhlverhalten: formData.get("stuhlverhalten"),
-    therapie: formData.get("therapie")
+    stuhlfarbe: formData.get("stuhlfarbe"),
+    stuhlmenge: formData.get("stuhlmenge"),
+    stuhldruck: formData.get("stuhldruck"),
+    therapie: formData.get("therapie"),
+    anmerkungen: formData.get("anmerkungen")
   });
   if (!validatedFields.success) {
     throw {
@@ -154,20 +170,18 @@ function validatePoopFormData(formData: FormData): Poop {
     validatedFields.data.uhrzeit
   );
 
-  if (validatedFields.data.stuhltyp === 0) {
-    throw {
-      errors: getPoopError(validatedFields),
-      message: "Bitte den Stuhltyp angeben. Siehe Infos."
-    };
-  }
-
-  const poop: Poop = {
+  const toilet: Toilet = {
     datetime: datetime.toDate(),
+    urinmenge: validatedFields.data.urinmenge,
+    urindruck: validatedFields.data.urindruck,
     stuhltyp: validatedFields.data.stuhltyp,
-    stuhlverhalten: validatedFields.data.stuhlverhalten,
-    therapie: validatedFields.data.therapie
+    stuhlfarbe: validatedFields.data.stuhlfarbe,
+    stuhlmenge: validatedFields.data.stuhlmenge,
+    stuhldruck: validatedFields.data.stuhldruck,
+    therapie: validatedFields.data.therapie,
+    anmerkungen: validatedFields.data.anmerkungen
   };
-  return poop;
+  return toilet;
 }
 
 function handleFoodError(err: any) {
@@ -183,13 +197,11 @@ function handleFoodError(err: any) {
     return err as StateFood;
   }
 
-  if ((err as StatePoop).errors?.stuhltyp) {
-    return err as StatePoop;
+  if ((err as StateToilet).errors?.stuhltyp) {
+    return err as StateToilet;
   }
 
-  return {
-    message: "Unkown state error."
-  };
+  return err;
 }
 
 export async function createFood(prevState: StateFood, formData: FormData) {
@@ -197,21 +209,24 @@ export async function createFood(prevState: StateFood, formData: FormData) {
     const validatedFields = validateFoodFormData(formData);
     await prisma?.food.create({ data: validatedFields });
   } catch (err) {
-    return handleFoodError(err);
+    return handleFoodError(err) as StateFood;
   }
   revalidatePath("/dashboard/food");
   redirect("/dashboard/food");
 }
 
-export async function createPoop(prevState: StatePoop, formData: FormData) {
+export async function createToilet(
+  prevState: StateToilet,
+  formData: FormData
+): Promise<StateToilet> {
   try {
-    const validatedFields = validatePoopFormData(formData);
-    await prisma?.poop.create({ data: validatedFields });
+    const validatedFields = validateToiletFormData(formData);
+    await prisma?.toilet.create({ data: validatedFields });
   } catch (err) {
-    return handleFoodError(err);
+    return handleFoodError(err) as StateToilet;
   }
-  revalidatePath("/dashboard/poop");
-  redirect("/dashboard/poop");
+  revalidatePath("/dashboard/toilet");
+  redirect("/dashboard/toilet");
 }
 
 export async function updateFood(
@@ -235,13 +250,13 @@ export async function updatePoop(
   formData: FormData
 ) {
   try {
-    const validatedFields = validatePoopFormData(formData);
-    await prisma?.poop.update({ where: { id: id }, data: validatedFields });
+    const validatedFields = validateToiletFormData(formData);
+    await prisma?.toilet.update({ where: { id: id }, data: validatedFields });
   } catch (err) {
-    return handleFoodError(err);
+    return handleFoodError(err) as StateToilet;
   }
-  revalidatePath("/dashboard/poop");
-  redirect("/dashboard/poop");
+  revalidatePath("/dashboard/toilet");
+  redirect("/dashboard/toilet");
 }
 
 export async function copyFood(
@@ -254,10 +269,10 @@ export async function copyFood(
 
 export async function copyPoop(
   id: string,
-  prevState: StateFood,
+  prevState: StateToilet,
   formData: FormData
 ) {
-  return createPoop(prevState, formData);
+  return createToilet(prevState, formData);
 }
 
 export async function deleteFood(id: string) {
@@ -267,14 +282,15 @@ export async function deleteFood(id: string) {
     return { message: "Deleted Entry." };
   } catch (error) {
     return {
+      errors: [],
       message: "Database Error: Failed to Delete Entry."
     };
   }
 }
-export async function deletePoop(id: string) {
+export async function deleteToilet(id: string) {
   try {
-    await prisma?.poop.delete({ where: { id: id } });
-    revalidatePath("/dashboard/poop");
+    await prisma?.toilet.delete({ where: { id: id } });
+    revalidatePath("/dashboard/toilet");
     return { message: "Deleted Entry." };
   } catch (error) {
     return {

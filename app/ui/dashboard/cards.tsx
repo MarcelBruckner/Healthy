@@ -1,22 +1,13 @@
-import {
-  BanknotesIcon,
-  ClockIcon,
-  UserGroupIcon,
-  InboxIcon,
-  ClipboardDocumentIcon,
-  CakeIcon,
-  BeakerIcon,
-  ExclamationTriangleIcon,
-  ChevronDoubleDownIcon
-} from "@heroicons/react/24/outline";
-import { lusitana } from "@/app/ui/fonts";
 import { fetchCardData } from "@/app/lib/data";
+import { ContentPasteOutlined, CoronavirusOutlined, RestaurantMenuOutlined, WcOutlined } from "@mui/icons-material";
+import { Card as MUICard, CardHeader, Avatar, IconButton, CardContent, Typography, CardActions, Grid } from "@mui/material";
+import { red } from "@mui/material/colors";
 
 const iconMap = {
-  entries: ClipboardDocumentIcon,
-  foods: CakeIcon,
-  illness: BeakerIcon,
-  poops: ChevronDoubleDownIcon
+  entries: ContentPasteOutlined,
+  foods: RestaurantMenuOutlined,
+  illness: CoronavirusOutlined,
+  toilets: WcOutlined
 };
 
 export default async function CardWrapper() {
@@ -28,16 +19,16 @@ export default async function CardWrapper() {
   } = await fetchCardData();
 
   return (
-    <>
+    <Grid container spacing={4} justifyContent="center">
       <Card title="Einträge" value={totalNumberOfEntries} type="entries" />
       <Card title="Essen" value={numberOfFoods} type="foods" />
       <Card
-        title="Stuhlgänge"
+        title="Toilette"
         value={numberOfPoops}
-        type="poops"
+        type="toilets"
       />
       <Card title="Erkrankungen" value={numberOfDrinks} type="illness" />
-    </>
+    </Grid>
   );
 }
 
@@ -48,22 +39,34 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: "entries" | "foods" | "illness" | "poops";
+  type: "entries" | "foods" | "illness" | "toilets";
 }) {
   const Icon = iconMap[type];
 
   return (
-    <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
-      <div className="flex p-4">
-        {Icon ? <Icon className="h-5 w-5 text-gray-700" /> : null}
-        <h3 className="ml-2 text-sm font-medium">{title}</h3>
-      </div>
-      <p
-        className={`${lusitana.className}
-          truncate rounded-xl bg-white px-4 py-8 text-center text-2xl`}
-      >
-        {value}
-      </p>
-    </div>
+    <Grid item container direction="column" sm={6} md={6} lg={3} spacing={2}>
+      <Grid item>
+        <MUICard >
+          <CardHeader
+            avatar={
+              <Icon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+            }
+            action={
+              <IconButton aria-label="settings">
+              </IconButton>
+            }
+            title={title}
+          // subheader="September 14, 2016"
+          />
+          <CardContent>
+            <Typography variant="h4" color="text.secondary" align="center">
+              {value}
+            </Typography>
+          </CardContent>
+          <CardActions disableSpacing>
+          </CardActions>
+        </MUICard>
+      </Grid>
+    </Grid>
   );
 }

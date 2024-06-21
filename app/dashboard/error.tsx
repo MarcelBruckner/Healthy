@@ -1,5 +1,6 @@
 "use client";
 
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
 
 export default function Error({
@@ -15,17 +16,21 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="flex h-full flex-col items-center justify-center">
-      <h2 className="text-center">Something went wrong!</h2>
-      <button
-        className="mt-4 rounded-md bg-brand-500 px-4 py-2 text-sm text-white transition-colors hover:bg-brand-400"
-        onClick={
-          // Attempt to recover by trying to re-render the invoices route
-          () => reset()
-        }
-      >
-        Try again
-      </button>
-    </main>
+    <>
+      <Box height="70vh" width="100%" display="flex" justifyContent="center" alignItems="center">
+        <Box>
+          <Typography variant="h4" fontWeight="bold" gutterBottom>Etwas ist schiefgelaufen!</Typography>
+          <Button variant="contained"
+            onClick={
+              // Attempt to recover by trying to re-render the invoices route
+              () => reset()
+            }
+          >
+            Nochmal versuchen
+          </Button>
+        </Box>
+      </Box>
+
+    </>
   );
 }

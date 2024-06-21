@@ -9,7 +9,7 @@ export default function HealthyLogo() {
     >
       <Image
         src="/healthy-outline.png"
-        alt="Healthy - A self-hosted tracker for your health, eating habits and poop behavior."
+        alt="Healthy - A self-hosted tracker for your health, eating habits and toilet behavior."
         width={900}
         height={900}
         style={{ width: 'auto', height: '3rem', borderRadius: "1rem" }} // optional

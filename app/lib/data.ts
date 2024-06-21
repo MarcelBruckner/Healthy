@@ -1,11 +1,7 @@
-import { sql } from "@vercel/postgres";
-import { Food, FoodDB, PoopDB } from "./definitions";
-import { formatCurrency } from "./utils";
+import { FoodDB, ToiletDB } from "./definitions";
 import { promises as fs } from "fs";
 import { unstable_noStore as noStore } from "next/cache";
-import moment from "moment";
 import prisma from "./prisma";
-const { stringify } = require("csv-stringify/sync");
 
 function getDataPath() {
   if (process.env.DATA_PATH) {
@@ -47,7 +43,7 @@ export async function fetchCardData() {
   }
 }
 
-async function fetchFilteredFoodsUnpaginated(query: string): Promise<FoodDB[]> {
+export async function fetchFilteredFoods(query: string): Promise<FoodDB[]> {
   noStore();
 
   try {
@@ -89,31 +85,22 @@ async function fetchFilteredFoodsUnpaginated(query: string): Promise<FoodDB[]> {
   }
 }
 
-async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
+export async function fetchFilteredToilets(query: string): Promise<ToiletDB[]> {
   noStore();
 
   try {
     const possibleQueryNumber = !query || isNaN(+query) ? -1 : +query;
 
-    return await prisma?.poop.findMany({
+    return await prisma?.toilet.findMany({
       orderBy: { datetime: "desc" },
       where: {
         OR: [
-          {
-            stuhlverhalten: {
-              contains: query
-            }
-          },
           {
             stuhltyp: {
               equals: possibleQueryNumber
             }
           },
-          {
-            stuhlverhalten: {
-              contains: query
-            }
-          },
+
           {
             therapie: {
               contains: query
@@ -124,47 +111,16 @@ async function fetchFilteredPoopsUnpaginated(query: string): Promise<PoopDB[]> {
     });
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch poops.");
+    throw new Error("Failed to fetch toilets.");
   }
 }
 
 const ITEMS_PER_PAGE = 6;
-async function fetchFilteredEntries(
-  fetchFunc: (query: string) => Promise<any[]>,
-  query: string,
-  currentPage: number
-) {
-  try {
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const filteredEntries = await fetchFunc(query);
-
-    return filteredEntries.slice(offset, offset + ITEMS_PER_PAGE);
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch invoices.");
-  }
-}
-
-export async function fetchFilteredFoods(query: string, currentPage: number) {
-  return await fetchFilteredEntries(
-    fetchFilteredFoodsUnpaginated,
-    query,
-    currentPage
-  );
-}
-
-export async function fetchFilteredPoops(query: string, currentPage: number) {
-  return await fetchFilteredEntries(
-    fetchFilteredPoopsUnpaginated,
-    query,
-    currentPage
-  );
-}
 
 export async function fetchFoodPages(query: string) {
   noStore();
   try {
-    const foods = await fetchFilteredFoodsUnpaginated(query);
+    const foods = await fetchFilteredFoods(query);
 
     const totalPages = Math.ceil(Number(foods.length) / ITEMS_PER_PAGE);
     return totalPages;
@@ -195,7 +151,7 @@ export async function fetchFoodById(id: string) {
 }
 
 export async function fetchPoopById(id: string) {
-  return await fetchById(prisma.poop, id);
+  return await fetchById(prisma.toilet, id);
 }
 
 export async function fetchLatestFoods(): Promise<FoodDB[]> {
@@ -229,12 +185,12 @@ export async function fetchFoods(): Promise<FoodDB[]> {
   }
 }
 
-export async function fetchPoops(): Promise<PoopDB[]> {
+export async function fetchPoops(): Promise<ToiletDB[]> {
   noStore();
 
   try {
     return (
-      (await prisma?.poop.findMany({
+      (await prisma?.toilet.findMany({
         orderBy: { datetime: "desc" }
       })) ?? []
     );
@@ -259,9 +215,9 @@ export async function countPoops() {
   noStore();
 
   try {
-    return await prisma.poop.count();
+    return await prisma.toilet.count();
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch poops.");
+    throw new Error("Failed to fetch toilets.");
   }
 }

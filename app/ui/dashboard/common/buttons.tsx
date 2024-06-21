@@ -1,54 +1,66 @@
+'use client';
+
 import { DocumentDuplicateIcon, PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-export function CreateButton({ type }: { type: 'food' | 'poop' }) {
+import Button from '@mui/material/Button';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
+import { Fab, IconButton, styled } from "@mui/material";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AddIcon from '@mui/icons-material/Add';
+
+
+export function CreateButton({ type }: { type: 'food' | 'toilet' }) {
   const MAPPING = {
-    food: "Essen und Trinken anlegen",
-    poop: "Stuhlgang anlegen",
+    'food': "Essen und Trinken",
+    'toilet': "Toilette"
   }
-
-  return (
-    <Link
-      href={`/dashboard/${type}/create`}
-      className="flex h-10 items-center rounded-lg bg-brand-600 px-4 text-sm font-medium text-white transition-colors hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
-    >
-      <span className="hidden md:block">{MAPPING[type]}</span>{" "}
-      <PlusIcon className="h-5 md:ml-4" />
-    </Link>
-  );
+  return <Fab id='create' color="primary" variant="extended" style={{ position: 'fixed', zIndex: 1, right: 30, bottom: 30 }}
+    href={`/dashboard/${type}/create`}
+  >
+    <AddIcon sx={{ mr: 1 }} />
+    {MAPPING[type]} hinzufügen
+  </Fab>
 }
 
-export function EditButton({ id, type }: { id: string, type: 'food' | 'poop' }) {
+export function EditButton({ id, type }: { id: string, type: 'food' | 'toilet' }) {
   return (
-    <Link
+    <IconButton id="edit"
+      onClick={(e: React.MouseEvent) => {
+        e.stopPropagation(); // don't select this row after clicking
+      }}
       href={`/dashboard/${type}/${id}/edit`}
-      className={`edit-${type}-button rounded-md border p-2 hover:bg-gray-100`}
     >
-      <PencilIcon className="w-5" />
-    </Link>
+      <EditOutlinedIcon />
+    </IconButton >
   );
 }
-
-export function CopyButton({ id, type }: { id: string, type: 'food' | 'poop' }) {
+export function CopyButton({ id, type }: { id: string, type: 'food' | 'toilet' }) {
   return (
-    <Link
+    <IconButton id="copy"
+      onClick={(e: React.MouseEvent) => {
+        e.stopPropagation(); // don't select this row after clicking
+      }}
       href={`/dashboard/${type}/${id}/copy`}
-      className={`copy-${type}-button rounded-md border p-2 hover:bg-gray-100`}
     >
-      <DocumentDuplicateIcon className="w-5" />
-    </Link>
+      <ContentCopyOutlinedIcon />
+    </IconButton>
   );
 }
 
-export function DeleteButton({ id, type, deleteFunc }: { id: string, type: 'food' | 'poop', deleteFunc: (id: string) => any }) {
+export function DeleteButton({ id, type, deleteFunc }: { id: string, type: 'food' | 'toilet', deleteFunc: (id: string) => any }) {
   const deleteEntryWithId = deleteFunc.bind(null, id);
 
   return (
-    <form action={deleteEntryWithId}>
-      <button className={`delete-${type}-button rounded-md border p-2 hover:bg-gray-100`}>
-        <span className="sr-only">Delete</span>
-        <TrashIcon className="w-5" />
-      </button>
-    </form>
+    <IconButton id="delete"
+      onClick={(e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation(); // don't select this row after clicking
+        deleteEntryWithId();
+      }}
+    >
+      <DeleteOutlinedIcon />
+    </IconButton>
   );
 }

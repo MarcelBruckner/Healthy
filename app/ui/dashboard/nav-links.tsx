@@ -11,6 +11,7 @@ import HomeIcon from '@mui/icons-material/HomeOutlined';
 import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlined';
 import WcOutlinedIcon from '@mui/icons-material/WcOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Typography } from "@mui/material";
 
 
 // Map of links to display in the side navigation.
@@ -22,8 +23,8 @@ const links = [
     href: "/dashboard/food",
     icon: RestaurantMenuOutlinedIcon
   }, {
-    name: "Stuhlgang",
-    href: "/dashboard/poop",
+    name: "Toilette",
+    href: "/dashboard/toilet",
     icon: WcOutlinedIcon
   },
   { name: "Infos", href: "/dashboard/infos", icon: InfoOutlinedIcon }
@@ -36,13 +37,13 @@ export default function NavLinks() {
     <List>
       {links.map((link) => {
         const LinkIcon = link.icon;
-        return <ListItem component="a" key={link.name} href={link.href} disablePadding>
-          <ListItemButton>
+        return <ListItem key={link.name} disablePadding>
+          <ListItemButton href={link.href} >
             <ListItemIcon>
               <LinkIcon />
             </ListItemIcon>
-            <ListItemText >
-              {link.name}
+            <ListItemText disableTypography
+              primary={<Typography color={link.href === pathname ? 'primary.light' : 'primary'}>{link.name}</Typography>}>
             </ListItemText>
           </ListItemButton>
         </ListItem>
