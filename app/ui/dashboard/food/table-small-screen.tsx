@@ -26,7 +26,7 @@ export default async function Cards({ entries }: { entries: FoodDB[] }) {
                     <Icon sx={{ color: 'action.active' }} />
                 </Grid>
                 <Grid item xs={11}>
-                    <Typography>{value}</Typography>
+                    <Typography sx={{ whiteSpace: "pre-wrap" }}>{value}</Typography>
                 </Grid>
             </Grid>
         </>

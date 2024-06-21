@@ -37,10 +37,10 @@ export default function BaseForm({ food, state, dispatch }: { food?: FoodDB, sta
             <BasicFormControl icon={GroupsOutlinedIcon} id="motivation" label="Motivation" value={food?.motivation} errors={state.errors?.motivation} />
           </Grid >
           <Grid item xs={12}>
-            <BasicFormControl icon={RestaurantOutlinedIcon} id="speisen" label="Speisen" value={food?.speisen} errors={state.errors?.speisen} />
+            <BasicFormControl icon={RestaurantOutlinedIcon} multiline id="speisen" label="Speisen" value={food?.speisen} errors={state.errors?.speisen} />
           </Grid >
           <Grid item xs={12}>
-            <BasicFormControl icon={WineBarOutlinedIcon} id="getraenke" label="Getränke" value={food?.getraenke} errors={state.errors?.getraenke} />
+            <BasicFormControl icon={WineBarOutlinedIcon} multiline id="getraenke" label="Getränke" value={food?.getraenke} errors={state.errors?.getraenke} />
           </Grid >
           <Grid item xs={12}>
             <BasicFormControl icon={ReportProblemOutlinedIcon} id="beschwerden" label="Beschwerden" value={food?.beschwerden} errors={state.errors?.beschwerden} />
