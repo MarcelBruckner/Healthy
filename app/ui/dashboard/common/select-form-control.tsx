@@ -5,8 +5,6 @@ import clsx from 'clsx';
 import { Box, Input, MenuItem, Select, Typography } from '@mui/material';
 
 export default function SelectFormControl({ id, value, values, defaultValue, label, errors, icon }: { id: string, value: any, values: any[], defaultValue?: any, label: string, multiline?: boolean, errors?: string[], icon: any }) {
-
-
     const Icon = icon;
     return (
         <>
@@ -26,7 +24,7 @@ export default function SelectFormControl({ id, value, values, defaultValue, lab
                     fullWidth
                     variant='standard'
                 >
-                    {values.map((value, index) => <MenuItem id={value} value={index}>{value}</MenuItem>)}
+                    {values.map((value, index) => <MenuItem key={value} id={value} value={index}>{value}</MenuItem>)}
                 </Select>
             </FormControl >
 

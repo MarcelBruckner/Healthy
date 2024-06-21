@@ -1,6 +1,6 @@
 import Form from "@/app/ui/dashboard/toilet/create-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
-import { fetchFoodById, fetchPoopById } from "@/app/lib/data";
+import { fetchFoodById, fetchPoopById as fetchToiletById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const toilet = await fetchPoopById(id);
+  const toilet = await fetchToiletById(id);
   if (!toilet) {
     notFound();
   }
@@ -19,10 +19,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Essen und Trinken", href: "/dashboard/food" },
+          { label: "Essen und Trinken", href: "/dashboard/toilet" },
           {
             label: "Eintrag kopieren",
-            href: `/dashboard/food/copy`,
+            href: `/dashboard/toilet/copy`,
             active: true
           }
         ]}

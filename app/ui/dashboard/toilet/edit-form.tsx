@@ -19,17 +19,20 @@ import WaterDropOutlined from "@mui/icons-material/WaterDropOutlined";
 import { ContentPasteOutlined, MedicalServicesOutlined, ShowChartOutlined } from "@mui/icons-material/";
 import BaseForm from "./base-form";
 
+const VIEL_NORMAL_WENIG = ["Wenig", "Normal", "Viel"];
+const NIEDRIG_NORMAL_HOCH = ["Niedrig", "Normal", "Hoch"];
+const TOILET_COLORS = ["Braun", "Gelb", "Lehmfarben", "Schwarz", "Grün", "Rot"];
+const DEFAULT_NORMAL = "Normal";
+
 export default function CreateToiletForm({
-  toilet
+  toilet,
 }: {
-  toilet?: ToiletDB;
+  toilet: ToiletDB;
 }) {
   const initialState = { message: null, errors: {} };
 
-  if (toilet) {
-    toilet.datetime = new Date();
-  }
+  const updateEntryWithId = updateToilet.bind(null, toilet.id);
+  const [state, dispatch] = useFormState(updateEntryWithId, initialState);
 
-  const [state, dispatch] = useFormState(createToilet, initialState);
   return <BaseForm state={state} toilet={toilet} dispatch={dispatch}></BaseForm>
 }

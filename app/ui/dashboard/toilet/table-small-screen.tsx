@@ -1,19 +1,13 @@
 import { ToiletDB } from "@/app/lib/definitions";
-import { formatDatetime } from "@/app/lib/utils";
-import { deleteFood, deleteToilet } from "@/app/lib/actions";
+import { NIEDRIG_NORMAL_HOCH, STUHLFARBEN, WENIG_NORMAL_VIEL, formatDatetime } from "@/app/lib/utils";
+import { deleteToilet } from "@/app/lib/actions";
 import { CardActions, Divider, Grid, SvgIconTypeMap, Typography } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import React from "react";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import RestaurantOutlinedIcon from '@mui/icons-material/RestaurantOutlined';
-import WineBarOutlinedIcon from '@mui/icons-material/WineBarOutlined';
-import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import { CopyButton, DeleteButton, EditButton } from "../common/buttons";
-import { ColorLensOutlined, CompressOutlined, ContentPasteOutlined, FormatListNumberedOutlined, MedicalServicesOutlined, ShowChartOutlined, WaterDropOutlined } from "@mui/icons-material";
+import { ColorLensOutlined, CompressOutlined, ContentPasteOutlined, FormatListNumberedOutlined, MedicalServicesOutlined, ShowChartOutlined, WaterDropOutlined, WaterOutlined } from "@mui/icons-material";
 
 export default async function Cards({ entries }: { entries: ToiletDB[] }) {
     function Line({ icon, value }: { icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; }, value: any }) {
@@ -42,12 +36,12 @@ export default async function Cards({ entries }: { entries: ToiletDB[] }) {
                             {formatDatetime(entry.datetime)}
                         </Typography>
                         <Divider sx={{ marginY: 1 }} />
-                        <Line icon={WaterDropOutlined} value={entry.urinmenge} />
-                        <Line icon={CompressOutlined} value={entry.urindruck} />
-                        <Line icon={FormatListNumberedOutlined} value={`Typ ${entry.stuhltyp}`} />
-                        <Line icon={ColorLensOutlined} value={entry.stuhlfarbe} />
-                        <Line icon={ShowChartOutlined} value={entry.stuhlmenge} />
-                        <Line icon={CompressOutlined} value={entry.stuhldruck} />
+                        <Line icon={WaterDropOutlined} value={WENIG_NORMAL_VIEL[entry.urinmenge]} />
+                        <Line icon={WaterOutlined} value={NIEDRIG_NORMAL_HOCH[entry.urindruck]} />
+                        <Line icon={FormatListNumberedOutlined} value={entry.stuhltyp > 0 ? `Typ ${entry.stuhltyp}` : null} />
+                        <Line icon={ColorLensOutlined} value={STUHLFARBEN[entry.stuhlfarbe]} />
+                        <Line icon={ShowChartOutlined} value={WENIG_NORMAL_VIEL[entry.stuhlmenge]} />
+                        <Line icon={CompressOutlined} value={NIEDRIG_NORMAL_HOCH[entry.stuhldruck]} />
                         <Line icon={MedicalServicesOutlined} value={entry.therapie} />
                         <Line icon={ContentPasteOutlined} value={entry.anmerkungen} />
                     </CardContent>

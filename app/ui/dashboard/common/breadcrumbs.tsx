@@ -18,7 +18,7 @@ export default function Breadcrumbs({
     <div role="presentation" >
       <MUIBreadcumbs aria-label="breadcrumb">
         {breadcrumbs.map((breadcrumb) => (
-          <Button variant="text" href={breadcrumb.href}>{breadcrumb.label}</Button>
+          <Button key={breadcrumb.label} variant="text" disabled={breadcrumb.active} href={breadcrumb.href}>{breadcrumb.label}</Button>
         ))}
       </MUIBreadcumbs>
     </div>

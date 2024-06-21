@@ -1,4 +1,4 @@
-import Form from "@/app/ui/dashboard/toilet/create-form";
+import Form from "@/app/ui/dashboard/toilet/edit-form";
 import Breadcrumbs from "@/app/ui/dashboard/common/breadcrumbs";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -19,10 +19,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Essen und Trinken", href: "/dashboard/food" },
+          { label: "Essen und Trinken", href: "/dashboard/toilet" },
           {
             label: "Eintrag bearbeiten",
-            href: `/dashboard/food/${id}/edit`,
+            href: `/dashboard/toilet/${id}/edit`,
             active: true
           }
         ]}

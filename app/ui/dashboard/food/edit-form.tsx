@@ -18,17 +18,15 @@ import DateFormControl from "../common/date-form-control";
 import TimeFormControl from "../common/time-form-control";
 import BaseForm from "./base-form";
 
-export default function CreateFoodForm({
-  food
+export default function EditFoodForm({
+  food,
 }: {
-  food?: FoodDB;
+  food: FoodDB;
 }) {
   const initialState = { message: null, errors: {} };
 
-  if (food) {
-    food.datetime = new Date();
-  }
+  const updateEntryWithId = updateFood.bind(null, food.id);
+  const [state, dispatch] = useFormState(updateEntryWithId, initialState);
 
-  const [state, dispatch] = useFormState(createFood, initialState);
   return <BaseForm state={state} food={food} dispatch={dispatch}></BaseForm>
 }
