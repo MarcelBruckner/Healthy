@@ -1,5 +1,5 @@
 import { FoodDB } from "@/app/lib/definitions";
-import { formatDatetime } from "@/app/lib/utils";
+import { SCHARF_SCALA, formatDatetime } from "@/app/lib/utils";
 import { deleteFood } from "@/app/lib/actions";
 import { CardActions, Divider, Grid, SvgIconTypeMap, Typography } from "@mui/material";
 import Card from '@mui/material/Card';
@@ -13,6 +13,7 @@ import WineBarOutlinedIcon from '@mui/icons-material/WineBarOutlined';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import { CopyButton, DeleteButton, EditButton } from "../common/buttons";
+import { LocalFireDepartmentOutlined } from "@mui/icons-material";
 
 export default async function Cards({ entries }: { entries: FoodDB[] }) {
     function Line({ icon, value }: { icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; }, value: any }) {
@@ -45,6 +46,7 @@ export default async function Cards({ entries }: { entries: FoodDB[] }) {
                         <Line icon={PlaceOutlinedIcon} value={entry.ort} />
                         <Line icon={GroupsOutlinedIcon} value={entry.motivation} />
                         <Line icon={RestaurantOutlinedIcon} value={entry.speisen} />
+                        <Line icon={LocalFireDepartmentOutlined} value={SCHARF_SCALA[entry.scharf]} />
                         <Line icon={WineBarOutlinedIcon} value={entry.getraenke} />
                         <Line icon={ReportProblemOutlinedIcon} value={entry.beschwerden} />
                         <Line icon={ContentPasteOutlinedIcon} value={entry.anmerkungen} />

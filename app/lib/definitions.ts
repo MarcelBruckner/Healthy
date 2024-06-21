@@ -3,6 +3,7 @@ export type Food = {
   ort: string;
   motivation: string;
   speisen: string;
+  scharf: number;
   getraenke: string;
   beschwerden: string;
   anmerkungen: string;

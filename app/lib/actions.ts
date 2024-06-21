@@ -38,6 +38,7 @@ export type StateFood = {
     ort?: string[];
     motivation?: string[];
     speisen?: string[];
+    scharf?: string[];
     getraenke?: string[];
     beschwerden?: string[];
     anmerkungen?: string[];
@@ -68,6 +69,7 @@ const FormSchemaFood = z.object({
   ort: z.string(),
   motivation: z.string(),
   speisen: z.string(),
+  scharf: z.coerce.number(),
   getraenke: z.string(),
   beschwerden: z.string(),
   anmerkungen: z.string()
@@ -110,6 +112,7 @@ function validateFoodFormData(formData: FormData): Food {
     ort: formData.get("ort"),
     motivation: formData.get("motivation"),
     speisen: formData.get("speisen"),
+    scharf: formData.get("scharf"),
     getraenke: formData.get("getraenke"),
     beschwerden: formData.get("beschwerden"),
     anmerkungen: formData.get("anmerkungen")
@@ -138,6 +141,7 @@ function validateFoodFormData(formData: FormData): Food {
     ort: validatedFields.data.ort,
     motivation: validatedFields.data.motivation,
     speisen: validatedFields.data.speisen,
+    scharf: validatedFields.data.scharf,
     getraenke: validatedFields.data.getraenke,
     beschwerden: validatedFields.data.beschwerden,
     anmerkungen: validatedFields.data.anmerkungen

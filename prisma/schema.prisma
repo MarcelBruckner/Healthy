@@ -17,6 +17,7 @@ model Food {
   ort         String
   motivation  String
   speisen     String
+  scharf      Int
   getraenke   String
   beschwerden String
   anmerkungen String

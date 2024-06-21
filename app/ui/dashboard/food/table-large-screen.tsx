@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { FoodDB } from '@/app/lib/definitions';
-import { formatDatetime } from '@/app/lib/utils';
+import { SCHARF_SCALA, formatDatetime } from '@/app/lib/utils';
 import { deleteFood } from '@/app/lib/actions';
 import { EditButton, CopyButton, DeleteButton } from '../common/buttons';
 
@@ -13,6 +13,7 @@ export default function DataTable({ rows }: { rows: FoodDB[] }) {
         { field: 'ort', headerName: 'Ort', minWidth: 130 },
         { field: 'motivation', headerName: 'Motivation', minWidth: 130 },
         { field: 'speisen', headerName: 'Speisen', minWidth: 200 },
+        { field: 'scharf', headerName: 'Scharf', minWidth: 100, valueGetter: value => SCHARF_SCALA[value] },
         { field: 'getraenke', headerName: 'Getränke', minWidth: 200 },
         { field: 'beschwerden', headerName: 'Beschwerden', minWidth: 130 },
         { field: 'anmerkungen', headerName: 'Anmerkungen', minWidth: 130 },

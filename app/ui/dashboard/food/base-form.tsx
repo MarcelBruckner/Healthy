@@ -16,6 +16,9 @@ import { useRouter } from 'next/navigation'  // Usage: App router
 import BasicFormControl from "../common/form-control";
 import DateFormControl from "../common/date-form-control";
 import TimeFormControl from "../common/time-form-control";
+import SelectFormControl from "../common/select-form-control";
+import { LocalFireDepartmentOutlined } from "@mui/icons-material";
+import { SCHARF_SCALA } from "@/app/lib/utils";
 
 export default function BaseForm({ food, state, dispatch }: { food?: FoodDB, state: StateFood, dispatch: any }) {
   const router = useRouter();
@@ -38,6 +41,9 @@ export default function BaseForm({ food, state, dispatch }: { food?: FoodDB, sta
           </Grid >
           <Grid item xs={12}>
             <BasicFormControl icon={RestaurantOutlinedIcon} multiline id="speisen" label="Speisen" value={food?.speisen} errors={state.errors?.speisen} />
+          </Grid >
+          <Grid item xs={12}>
+            <SelectFormControl icon={LocalFireDepartmentOutlined} multiline id="scharf" label="Scharf" value={food?.scharf} values={SCHARF_SCALA} errors={state.errors?.scharf} />
           </Grid >
           <Grid item xs={12}>
             <BasicFormControl icon={WineBarOutlinedIcon} multiline id="getraenke" label="Getränke" value={food?.getraenke} errors={state.errors?.getraenke} />

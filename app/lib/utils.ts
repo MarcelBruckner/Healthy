@@ -15,6 +15,7 @@ export const BRISTOl_STOOL_SCALA = [
 
 export const WENIG_NORMAL_VIEL = ["", "Wenig", "Normal", "Viel"];
 export const NIEDRIG_NORMAL_HOCH = ["", "Niedrig", "Normal", "Hoch"];
+export const SCHARF_SCALA = ["", "Wenig", "Mittel", "Sehr"];
 export const STUHLFARBEN = [
   "",
   "Braun",
