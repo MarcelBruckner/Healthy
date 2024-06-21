@@ -1,9 +1,3 @@
-/*
-  Warnings:
-
-  - Added the required column `scharf` to the `Food` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- RedefineTables
 PRAGMA defer_foreign_keys=ON;
 PRAGMA foreign_keys=OFF;
@@ -13,7 +7,7 @@ CREATE TABLE "new_Food" (
     "ort" TEXT NOT NULL,
     "motivation" TEXT NOT NULL,
     "speisen" TEXT NOT NULL,
-    "scharf" INTEGER NOT NULL,
+    "scharf" INTEGER NOT NULL DEFAULT 0,
     "getraenke" TEXT NOT NULL,
     "beschwerden" TEXT NOT NULL,
     "anmerkungen" TEXT NOT NULL
