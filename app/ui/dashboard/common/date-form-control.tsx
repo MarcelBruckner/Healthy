@@ -20,7 +20,7 @@ export default function DateFormControl({ id, value, label, multiline, errors }:
                 sx={{ width: '100%' }}
                 defaultValue={value}
                 error={errors ? true : false}
-                inputProps={{ max: moment(new Date()).format("YYYY-MM-DD") }}
+            // inputProps={{ max: moment(new Date()).format("YYYY-MM-DD") }}
             />
             <HelperText errors={errors} />
         </FormControl>
